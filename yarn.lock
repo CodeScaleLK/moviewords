@@ -10799,6 +10799,11 @@ unique-string@^1.0.0:
   dependencies:
     crypto-random-string "^1.0.0"
 
+unique-words@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/unique-words/-/unique-words-2.0.1.tgz#238bdaef09595b626e61dbf3db7cbb6290e6c654"
+  integrity sha512-5nB/5lAAfGlqJRVGfxJ8G9sa/Xs4lvosqQPENQUwM7wvGkEy0pV88H0VZ3+XvY2mBpwhzQd1U9NSEIx0vTwA7w==
+
 universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
