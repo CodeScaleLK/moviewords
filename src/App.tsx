@@ -21,7 +21,7 @@ const App = () => {
       });
       setexistingWords(wordsDataArray);
     });
-  }, [existingWords]);
+  }, [setexistingWords]);
 
   const readFile = (event: any) => {
     var file = event.target.files[0];
@@ -31,7 +31,7 @@ const App = () => {
       var srtLower = typeof srt === "string" ? srt.toLowerCase() : srt;
       var uniquewords = unique(srtLower);
       var wordsAll = uniquewords.filter((str: any) =>
-        str.match(/^(?:(?![0-9]).)*$/)
+        str.match(/^(?:(?![0-9]).){2,}$/)
       );
       var removeOb: any = {};
       existingWords?.forEach((e) => (removeOb[e] = true));
