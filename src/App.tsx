@@ -51,7 +51,7 @@ const App = () => {
         <h4>Learn new english words, before watching a film!</h4>
         <div className="file-input">
           <label className="file-button" htmlFor="file">
-            Upload File
+            Upload Subtitle
           </label>
           <input
             type="file"
