@@ -1,5 +1,10 @@
+@font-face {
+  font-family: "Cousine";
+  src: local("Cousine"), url(./fonts/cousin.ttf) format("truetype");
+}
+
 body {
-  background-color: #dbdbdb;
+  background-color: #eeeeee;
 }
 
 .content {
@@ -19,22 +24,28 @@ body {
 }
 
 .title h2 {
-  margin-top: 20px;
+  margin-top: 50px;
   margin-bottom: 0;
+  font-weight: 800;
+  font-size: 35px;
+  font-family: Cousine, serif;
 }
 
 .title h4 {
+  max-width: 400px;
   margin-top: 15px;
   margin-bottom: 0;
   text-align: center;
+  font-family: Cousine, serif;
 }
 
 .words-box {
   display: flex;
   flex-direction: row;
-  margin: 10px;
+  margin: 0 30px 10px;
   padding: 20px;
   border-radius: 10px;
+  justify-content: center;
   background-color: white;
   flex-wrap: wrap;
 }
@@ -48,7 +59,21 @@ body {
 
 .marked-word {
   margin: 3px;
-  background-color: #ff8d8d;
+  background-color: #ffc3c3;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.in-list-word {
+  margin: 3px;
+  background-color: #e4ffce;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.known-word {
+  margin: 3px;
+  background-color: #d1e9ff;
   border-radius: 10px;
   padding: 10px;
 }
@@ -56,4 +81,61 @@ body {
 .file-input {
   margin-top: 20px;
   margin-bottom: 10px;
+}
+
+.words-counts {
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+  font-weight: 700;
+}
+
+.words-counts p {
+  margin: 2px 10px;
+  font-size: 16px;
+}
+
+.sub-title {
+  border-radius: 10px 10px 0 0;
+  padding: 10px;
+  margin: 10px 0 0 0;
+  font-size: 18px;
+}
+
+.green-color {
+  background-color: #e4ffce;
+}
+
+.blue-color {
+  background-color: #d1e9ff;
+}
+
+.red-color {
+  background-color: #ffb3b3;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.file-input {
+  position: relative;
+}
+
+.file-button {
+  display: inline-block;
+  background-color: #00ffe1;
+  border-radius: 10px;
+  border: 4px double #00ffe1;
+  text-align: center;
+  font-size: 20px;
+  padding: 8px;
+  width: 100px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.file-button:hover {
+  background-color: #00c7b0;
 }
