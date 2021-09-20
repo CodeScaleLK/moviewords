@@ -94,6 +94,7 @@ const App = () => {
               <Word disable option={3} key={index} item={item} />
             ))}
           </div>
+          <h5 className="copy-name">© Lakpriya Senevirathna</h5>
         </>
       )}
     </div>

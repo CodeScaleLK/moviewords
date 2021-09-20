@@ -42,7 +42,7 @@ body {
 .words-box {
   display: flex;
   flex-direction: row;
-  margin: 0 14px 14px;
+  margin: 0 14px 0;
   padding: 20px;
   border-radius: 10px;
   justify-content: center;
@@ -138,4 +138,8 @@ input[type="file"] {
 
 .file-button:hover {
   background-color: #00c7b0;
+}
+
+.copy-name {
+  margin: 10px;
 }
