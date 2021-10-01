@@ -1,6 +1,6 @@
 {
   "scope": "/",
-  "orientation": "any",
+  "orientation": "natural",
   "serviceworker": {
     "src": "serviceWorker.js",
     "scope": "/"

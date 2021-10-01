@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
+import "./App.scss";
 import "./add-to-home.scss";
 import Word from "./components/word";
 import { initDB, useIndexedDB } from "react-indexed-db";
@@ -15,6 +15,7 @@ const App = () => {
   const [words, setwords] = useState([]);
   const [existingWords, setexistingWords] = useState<any[]>([]);
   const [removedWords, setremovedWords] = useState<any[]>([]);
+  const [selectAllWords, setselectAllWords] = useState(false);
   const { getAll } = useIndexedDB("words");
 
   useEffect(() => {
@@ -26,6 +27,10 @@ const App = () => {
       setexistingWords(wordsDataArray);
     });
   }, [setexistingWords]);
+
+  const selectAll = () => {
+    setselectAllWords(!selectAllWords);
+  };
 
   const readFile = (event: any) => {
     var file = event.target.files[0];
@@ -70,12 +75,38 @@ const App = () => {
           <p>{`New Words: ${words.length}`}</p>
           <p>{`Learned Words: ${existingWords?.length}`}</p>
         </div>
+        {words.length === 0 && existingWords.length === 0 && (
+          <div className="toast">
+            <p>Please upload a subtitle file first!</p>
+          </div>
+        )}
+        {words.length !== 0 && existingWords.length === 0 && (
+          <div className="toast">
+            <p>
+              {!selectAllWords
+                ? `Please add words to your library by selecting words you already
+              know!`
+                : `Please remove words from your library by selecting words you don't know yet!`}
+            </p>
+          </div>
+        )}
         {words.length !== 0 && (
           <>
-            <p className="sub-title red-color">New words in this file!</p>
+            <div className="red-color new-set">
+              <p className="red-sub">New words in this file!</p>
+              <button className="add-all-btn" onClick={() => selectAll()}>
+                {selectAllWords ? `Remove all` : `Add all`}
+              </button>
+            </div>
             <div className="words-box">
               {words.map((item, index) => (
-                <Word disable={false} option={1} key={index} item={item} />
+                <Word
+                  disable={false}
+                  invert={selectAllWords}
+                  option={1}
+                  key={index}
+                  item={item}
+                />
               ))}
             </div>
           </>
@@ -85,7 +116,13 @@ const App = () => {
             <p className="sub-title blue-color">Learned words in this file!</p>
             <div className="words-box">
               {removedWords?.map((item, index) => (
-                <Word disable option={2} key={index} item={item} />
+                <Word
+                  disable
+                  option={2}
+                  invert={false}
+                  key={index}
+                  item={item}
+                />
               ))}
             </div>
           </>
@@ -96,7 +133,13 @@ const App = () => {
             <p className="sub-title green-color">All words you already know!</p>
             <div className="words-box">
               {existingWords.map((item, index) => (
-                <Word disable option={3} key={index} item={item} />
+                <Word
+                  disable
+                  option={3}
+                  invert={false}
+                  key={index}
+                  item={item}
+                />
               ))}
             </div>
           </>

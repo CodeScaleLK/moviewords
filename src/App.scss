@@ -21,22 +21,22 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
 
-.title h2 {
-  margin-top: 50px;
-  margin-bottom: 0;
-  font-weight: 800;
-  font-size: 35px;
-  font-family: Cousine, serif;
-}
+  h2 {
+    margin-top: 50px;
+    margin-bottom: 0;
+    font-weight: 800;
+    text-align: center;
+    font-size: 35px;
+    font-family: Cousine, serif;
+  }
 
-.title h4 {
-  max-width: 400px;
-  margin-top: 15px;
-  margin-bottom: 0;
-  text-align: center;
-  font-family: Cousine, serif;
+  h4 {
+    max-width: 400px;
+    margin: 15px 20px 0;
+    text-align: center;
+    font-family: Cousine, serif;
+  }
 }
 
 .words-box {
@@ -102,6 +102,16 @@ body {
   font-size: 18px;
 }
 
+.red-sub {
+  background-color: #ffb3b3;
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
 .green-color {
   background-color: #e4ffce;
 }
@@ -147,4 +157,35 @@ input[type="file"] {
 
 .made-with {
   margin: 10px 0 0;
+}
+
+.new-set {
+  display: flex;
+  flex-direction: row;
+  border-radius: 10px 10px 0 0;
+  padding: 10px;
+  margin: 10px 0 0 0;
+}
+
+.add-all-btn {
+  border-radius: 10px;
+  margin: 2px 10px;
+  padding: 5px;
+}
+
+.toast {
+  background-color: rgb(255, 240, 240);
+  border-radius: 10px;
+  border-width: 1px;
+  max-width: 400px;
+  margin: 10px 20px;
+  border-color: black;
+  border-style: solid;
+  padding: 10px;
+
+  p {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
 }
