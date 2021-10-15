@@ -6,11 +6,13 @@ const Word = ({
   disable = false,
   option,
   invert,
+  youGlish,
 }: {
   item: string;
   disable: boolean | undefined;
   option: number;
   invert: boolean;
+  youGlish?: Function;
 }) => {
   const { add, deleteRecord } = useIndexedDB("words");
   const [marked, setmarked] = useState(false);
@@ -57,8 +59,7 @@ const Word = ({
 
   return (
     <>
-      <p
-        onClick={() => markWord()}
+      <div
         className={
           option === 2
             ? "known-word"
@@ -69,8 +70,15 @@ const Word = ({
             : "word"
         }
       >
-        {item}
-      </p>
+        <p className="p-words" onClick={() => markWord()}>
+          {item}
+        </p>
+        {option === 1 && (
+          <div className="playable">
+            <i className="fa fa-play" aria-hidden="false" title=""></i> {item}
+          </div>
+        )}
+      </div>
     </>
   );
 };

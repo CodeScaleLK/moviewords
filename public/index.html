@@ -65,6 +65,7 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Word Library</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   </head>
   <body>
     <script type="application/javascript">
@@ -90,7 +91,49 @@
         });
       }
     </script>
+
+    <script
+      async
+      src="https://youglish.com/public/emb/widget.js"
+      charset="utf-8"
+    ></script>
+
+    <script>
+      var widget;
+
+      $("body").on("click", ".playable", function (event) {
+        if (widget) {
+          var text = $(this).text();
+          widget.fetch(text, "english");
+          $(".ygParent").show();
+        } else {
+          alert("YG is unavailable. Try again later");
+        }
+      });
+
+      function onYouglishAPIReady() {
+        widget = YG.getWidget("yg-widget-0");
+        if (widget) {
+          widget.addEventListener("onError", errorHdler);
+        }
+      }
+
+      function errorHdler(event) {
+        switch (event.code) {
+          case YG.Error.OUTDATED_BROWSER:
+            alert("YG can't be run. Upgrade your browser and try again!");
+            break;
+          case YG.Error.TIMEOUT:
+            $(".ygParent").hide();
+            if (widget) widget.close();
+            alert("YG is unavailable. Try again later.");
+            break;
+        }
+      }
+    </script>
+
     <div id="root"></div>
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

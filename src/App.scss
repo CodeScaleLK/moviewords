@@ -39,6 +39,74 @@ body {
   }
 }
 
+.youglish_open {
+  width: 500px;
+  height: auto;
+  position: fixed;
+  padding: 5px;
+  border-radius: 5px;
+  background: #eee;
+  border: 1px solid #aba3a3;
+}
+
+.youglish_close {
+  opacity: 0;
+  pointer-events: none;
+  width: 500px;
+  height: auto;
+  position: fixed;
+  padding: 5px;
+  border-radius: 5px;
+  background: #eee;
+  border: 1px solid #aba3a3;
+}
+
+.close_btn {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: 0;
+  margin-right: 3px;
+}
+
+.modal_container {
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  pointer-events: none;
+  position: fixed;
+  height: 100%;
+  z-index: 2;
+
+  .ygParent {
+    position: fixed;
+    pointer-events: initial;
+    width: 500px;
+    z-index: 1000;
+  }
+}
+
+.playable {
+  cursor: pointer;
+  font-size: 0;
+  padding: 10px 10px 10px 0;
+  display: none;
+  align-items: center;
+
+  i {
+    font-size: 15px;
+  }
+}
+
+.p-words:hover + .playable {
+  display: flex;
+}
+
+.playable:hover {
+  display: flex;
+}
+
 .words-box {
   display: flex;
   flex-direction: row;
@@ -50,32 +118,41 @@ body {
   flex-wrap: wrap;
 }
 
+.p-words {
+  margin: 0;
+  padding: 10px;
+}
+
 .word {
-  margin: 3px;
   background-color: #f0f0f0;
   border-radius: 10px;
-  padding: 10px;
+  display: flex;
+  margin: 4px;
+  flex-direction: row;
+  cursor: pointer;
 }
 
 .marked-word {
-  margin: 3px;
   background-color: #ffc3c3;
   border-radius: 10px;
-  padding: 10px;
+  display: flex;
+  margin: 4px;
+  cursor: pointer;
+  flex-direction: row;
 }
 
 .in-list-word {
-  margin: 3px;
   background-color: #e4ffce;
   border-radius: 10px;
-  padding: 10px;
+  margin: 4px;
+  cursor: pointer;
 }
 
 .known-word {
-  margin: 3px;
   background-color: #d1e9ff;
   border-radius: 10px;
-  padding: 10px;
+  margin: 4px;
+  cursor: pointer;
 }
 
 .file-input {
@@ -187,5 +264,14 @@ input[type="file"] {
     margin: 0;
     padding: 0;
     text-align: center;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .ygParent {
+    position: fixed;
+    max-width: 90%;
+    display: none;
+    z-index: 1000;
   }
 }

@@ -6,6 +6,7 @@ import { initDB, useIndexedDB } from "react-indexed-db";
 import { DBConfig } from "./DBConfig";
 import AddToHomeScreen from "@ideasio/add-to-homescreen-react";
 import logo from "./images/icons/logo512.png";
+import closeIco from "./images/icons/close.svg";
 
 const unique = require("unique-words");
 
@@ -16,6 +17,8 @@ const App = () => {
   const [existingWords, setexistingWords] = useState<any[]>([]);
   const [removedWords, setremovedWords] = useState<any[]>([]);
   const [selectAllWords, setselectAllWords] = useState(false);
+  const [widge, setwidge] = useState(false);
+  const [playWord, setplayWord] = useState("");
   const { getAll } = useIndexedDB("words");
 
   useEffect(() => {
@@ -53,8 +56,28 @@ const App = () => {
     reader.readAsText(file);
   };
 
+  const youGlish = (item: string) => {
+    setplayWord(item);
+    setwidge(!widge);
+  };
+
   return (
     <>
+      <div className="modal_container">
+        <div className="ygParent">
+          <a
+            id="yg-widget-0"
+            className="youglish-widget"
+            data-components="7423"
+            data-delay-load="1"
+            data-toggle-ui="1"
+            href="https://youglish.com"
+          >
+            {" "}
+          </a>
+        </div>
+      </div>
+
       <div className="content">
         <div className="title">
           <h2>Word Library</h2>
@@ -106,6 +129,7 @@ const App = () => {
                   option={1}
                   key={index}
                   item={item}
+                  youGlish={(item: string) => youGlish(item)}
                 />
               ))}
             </div>
