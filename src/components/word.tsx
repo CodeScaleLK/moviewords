@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useIndexedDB } from "react-indexed-db";
+import play from "../images/icons/play.png";
 
 const Word = ({
   item,
@@ -75,7 +76,7 @@ const Word = ({
         </p>
         {option === 1 && (
           <div className="playable">
-            <i className="fa fa-play" aria-hidden="false" title=""></i> {item}
+            <img src={play} alt="play" className="play"></img> {item}
           </div>
         )}
       </div>
