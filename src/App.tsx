@@ -89,6 +89,7 @@ const App = () => {
             <input
               type="file"
               name="file"
+              accept=".vtt,pdf,.srt,.txt,.svb,.ttml,.dfxp"
               id="file"
               onChange={(e) => readFile(e)}
             />
