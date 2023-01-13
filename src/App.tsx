@@ -77,8 +77,7 @@ const App = () => {
           'Api-Key': 'mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP'
         },
         
-      }
-      )
+      })
         .then((response) => response.json())
         .then((data) => {
           if(data['status'] === 400){
@@ -93,6 +92,27 @@ const App = () => {
         });
   }
 
+  const onFilmClck= (filmId:number)=>{
+    console.log(filmId);
+    fetch("https://api.opensubtitles.com/api/v1/download",
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Api-Key': 'mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP'
+        },
+        body: '{"file_id":'+filmId+'}'
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data['link']);
+          
+        })
+        .catch((err) => {
+            console.log('Failed to download');
+        });
+    
+  }
 
   return (
     <>
@@ -127,11 +147,15 @@ const App = () => {
                 {/* <button onClick={handleSearchClick}>Search</button> */}
 
                 <br />
-              {movieList? movieList.map(movie=>{
-                return <p>{movie['attributes']['feature_details']['movie_name']}</p>
-              }):'no films'}
+                <ul className="film-list">   
+                {movieList? movieList.map(movie=>{
+                  return <li key={movie['id']} onClick={()=>{onFilmClck(movie['attributes']['files'][0]['file_id'])}}>{movie['attributes']['feature_details']['movie_name']}</li>
+                }):'no films'}
+                </ul>
               
             </div>
+
+            {/* user film ekak click karma eken opensubtitle ekata post request ekak yawala sus dowload kargnna */}
 
           </div>
           <div className="file-input">
