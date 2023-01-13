@@ -42,8 +42,7 @@ const App = () => {
     setselectAllWords(!selectAllWords);
   };
 
-  const readFile = (event: any) => {
-    var file = event.target.files[0];
+  const readFile = (file: any) => {
     var reader = new FileReader();
     reader.onload = (event) => {
       var srt = event.target?.result;
@@ -62,7 +61,9 @@ const App = () => {
 
     reader.readAsText(file);
   };
-
+  const uploadFile =  (e:any)=>{
+    readFile(e.target.files[0])
+  }
   const youGlish = (item: string) => {
     setplayWord(item);
     setwidge(!widge);
@@ -106,7 +107,14 @@ const App = () => {
         .then((response) => response.json())
         .then((data) => {
           console.log(data['link']);
-          
+          fetch(data['link'])
+          .then(response => response.text())
+          .then(subtitles => {
+            const file = new File([subtitles], 'subtitles.srt', { type: 'text/plain' });
+            readFile(file);
+    
+          });
+
         })
         .catch((err) => {
             console.log('Failed to download');
@@ -167,7 +175,7 @@ const App = () => {
               name="file"
               accept=".vtt,pdf,.srt,.txt,.svb,.ttml,.dfxp"
               id="file"
-              onChange={(e) => readFile(e)}
+              onChange={uploadFile}
             />
           </div>
         </div>
