@@ -7,12 +7,15 @@ import { DBConfig } from "./DBConfig";
 import AddToHomeScreen from "@ideasio/add-to-homescreen-react";
 import logo from "./images/icons/logo512.png";
 import closeIco from "./images/icons/close.svg";
+import { cachedDataVersionTag } from "v8";
 
 const unique = require("unique-words");
 
 initDB(DBConfig);
 
 const App = () => {
+  const [filmName,setFilmName]= useState('');
+  const [movieList, setMovieList]= useState([])
   const [words, setwords] = useState([]);
   const [existingWords, setexistingWords] = useState<any[]>([]);
   const [removedWords, setremovedWords] = useState<any[]>([]);
@@ -20,6 +23,10 @@ const App = () => {
   const [widge, setwidge] = useState(false);
   const [playWord, setplayWord] = useState("");
   const { getAll } = useIndexedDB("words");
+
+  // getting substitles
+  // useEffect(() => {}, []);
+
 
   useEffect(() => {
     getAll().then((wordinDb) => {
@@ -61,6 +68,32 @@ const App = () => {
     setwidge(!widge);
   };
 
+
+  const handleSearch = (e: any) =>{
+      setFilmName(e.target.value);
+      fetch("https://api.opensubtitles.com/api/v1/subtitles?languages=en&query="+filmName,
+      {
+        headers: {
+          'Api-Key': 'mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP'
+        },
+        
+      }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if(data['status'] === 400){
+            console.log('Name is too short');
+          }
+          console.log(data['data']);
+          setMovieList(data['data']);
+
+        })
+        .catch((err) => {
+            console.log('Failed to load');
+        });
+  }
+
+
   return (
     <>
       <div className="modal_container">
@@ -82,6 +115,25 @@ const App = () => {
         <div className="title">
           <h2>Word Library</h2>
           <h4>Learn new english words, before watching a film!</h4>
+          <div className="film-search">
+            <div className="search-box">
+              
+                <input
+                  type="text"
+                  name="film-name"
+                  placeholder="Enter Film Name"
+                  onChange={handleSearch}
+                />
+                {/* <button onClick={handleSearchClick}>Search</button> */}
+
+                <br />
+              {movieList? movieList.map(movie=>{
+                return <p>{movie['attributes']['feature_details']['movie_name']}</p>
+              }):'no films'}
+              
+            </div>
+
+          </div>
           <div className="file-input">
             <label className="file-button" htmlFor="file">
               Upload Subtitle
