@@ -8,6 +8,11 @@ import AddToHomeScreen from "@ideasio/add-to-homescreen-react";
 import SearchBox from "./components/SearchBox";
 import logo from "./images/icons/logo512.png";
 import closeIco from "./images/icons/close.svg";
+import uploadIcon from "./images/icons/upload.svg";
+import searchIcon from "./images/icons/search.svg";
+import showWordsIcon from "./images/icons/showwords.svg";
+import buyMeCoffee from "./images/bmc.png";
+import paypal from "./images/paypal.png";
 import { cachedDataVersionTag } from "v8";
 
 const unique = require("unique-words");
@@ -106,6 +111,7 @@ const App = () => {
   }
 
   const onFilmClick= (filmId:number)=>{
+    setFilmName("");
     console.log(filmId);
     fetch("https://api.opensubtitles.com/api/v1/download",
       {
@@ -153,24 +159,26 @@ const App = () => {
 
       <div className="content">
         <div className="title">
-          <h2>Word Library</h2>
+          <h2>Film Words</h2>
           <h4>Learn new english words, before watching a film!</h4>
-          <SearchBox handleSearch={handleSearch} movieList={movieList} onFilmClick={onFilmClick} listStyle={listStyle} />
 
-          <div className="file-input">
-            <label className="file-button" htmlFor="file">
-              Upload Subtitle
-            </label>
-            <input
-              type="file"
-              name="file"
-              accept=".vtt,pdf,.srt,.txt,.svb,.ttml,.dfxp"
-              id="file"
-              onChange={uploadFile}
-            />
+          <SearchBox handleSearch={handleSearch} movieList={movieList} onFilmClick={onFilmClick} listStyle={listStyle} />
+          <div className="icon-row">
+            <img className="icon-style" src={searchIcon} alt="search-icon"  />
+              <label htmlFor="file">
+                <img src={uploadIcon} alt="upload-icon" className="icon-style"  />
+              </label>
+              <input
+                type="file"
+                name="file"
+                accept=".vtt,pdf,.srt,.txt,.svb,.ttml,.dfxp"
+                id="file"
+                onChange={uploadFile}
+              />
+            <img className="icon-style" src={showWordsIcon} alt="show-words-icon"  />
           </div>
         </div>
-        <div className="words-counts">
+        {/* <div className="words-counts">
           <p>{`New Words: ${words.length}`}</p>
           <p>{`Learned Words: ${existingWords?.length}`}</p>
         </div>
@@ -254,7 +262,11 @@ const App = () => {
               CodeScale
             </h6>
           </>
-        )}
+        )} */}
+        <div className="donate-row">
+          <img src={buyMeCoffee}  alt="buy_me_coffee" />
+          <img src={paypal}  alt="paypal" />
+        </div>
       </div>
       <AddToHomeScreen
         appId="Word Library"

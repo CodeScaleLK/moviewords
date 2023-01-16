@@ -21,8 +21,8 @@ const SearchBox= (props : any)=>{
                             <img 
                             src={movie['attributes']['related_links'][0]['img_url']}
                             alt="movie icon"
-                            height={70}
-                            width={48}
+                            height={80}
+                            width={55}
                             />
                             <div className="film-details">
                                 <div className="film-name">

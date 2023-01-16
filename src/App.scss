@@ -2,9 +2,13 @@
   font-family: "Cousine";
   src: local("Cousine"), url(./fonts/cousin.ttf) format("truetype");
 }
+@font-face {
+  font-family: "Nunito";
+  src: local("Nunito"), url(./fonts/Nunito-Regular.ttf) format("truetype");
+}
 
 body {
-  background-color: #eeeeee;
+  background: #F5F5F5;
 }
 
 .content {
@@ -13,6 +17,7 @@ body {
   justify-content: center;
   align-items: center;
   margin: auto;
+  height: 80vh;
   max-width: 1200px;
 }
 
@@ -21,21 +26,23 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  color: #3C3C3C;
 
   h2 {
     margin-top: 50px;
     margin-bottom: 0;
-    font-weight: 800;
+    font-weight: 900;
     text-align: center;
-    font-size: 35px;
-    font-family: Cousine, serif;
+    font-size: 84px;
+    font-family: Nunito, serif;
   }
 
   h4 {
     max-width: 400px;
     margin: 15px 20px 0;
     text-align: center;
-    font-family: Cousine, serif;
+    font-size: 24px;
+    font-family: Nunito, serif;
   }
 }
 
@@ -280,6 +287,23 @@ input[type="file"] {
   }
 }
 
+.icon-row{
+  margin-top: 20px;
+  .icon-style{
+    cursor: pointer;
+    height: 50px;
+    margin: 0 20px ;
+  }
+}
+.donate-row{
+  position: fixed;  
+  bottom: 20px;  
+  text-align: center;
+  img{
+    height: 35px;
+    margin: 0 10px;
+  }
+}
 @media only screen and (max-width: 500px) {
   .ygParent {
     position: fixed;
