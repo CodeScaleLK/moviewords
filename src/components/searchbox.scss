@@ -1,0 +1,61 @@
+
+
+.film-list{
+    height:300px;
+    width:100%;
+    overflow:hidden;
+    overflow-y:scroll;
+    border:1px solid rgb(114, 110, 110);
+    border-radius: 15px;
+    background-color: white;
+    li{
+        list-style-type: none;
+    }
+}
+.movie-item{
+    cursor: pointer;
+    margin: 5px 10px 0 -30px;
+    height: 70px;
+    display:flex;
+    flex-flow:row;
+    align-items:center;
+    img{
+        display: inline-block;
+    }
+    .film-details{
+        margin-left: 5px;
+        display:flex;
+        flex-flow:column;
+        .film-name{
+            font-weight: bold;
+            font-size: 17px;
+        }
+        .film-year{
+
+        }
+        
+    }
+}
+.movie-item:hover{
+    background-color:  rgb(221, 218, 218);
+}
+.search-input {
+    border:1px solid rgb(114, 110, 110);
+    border-radius: 30px;
+    width: 100%;
+    height: 30px;
+    padding: 5px 20px;
+    margin: 25px 0 0 0;
+}
+    
+/* Hide scrollbar for Chrome, Safari and Opera */
+.film-list::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .film-list {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  

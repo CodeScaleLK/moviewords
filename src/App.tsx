@@ -5,6 +5,7 @@ import Word from "./components/word";
 import { initDB, useIndexedDB } from "react-indexed-db";
 import { DBConfig } from "./DBConfig";
 import AddToHomeScreen from "@ideasio/add-to-homescreen-react";
+import SearchBox from "./components/SearchBox";
 import logo from "./images/icons/logo512.png";
 import closeIco from "./images/icons/close.svg";
 import { cachedDataVersionTag } from "v8";
@@ -15,7 +16,8 @@ initDB(DBConfig);
 
 const App = () => {
   const [filmName,setFilmName]= useState('');
-  const [movieList, setMovieList]= useState([])
+  const [movieList, setMovieList]= useState([]);
+  const [listStyle, setListStyle] = useState({display:'none'});
   const [words, setwords] = useState([]);
   const [existingWords, setexistingWords] = useState<any[]>([]);
   const [removedWords, setremovedWords] = useState<any[]>([]);
@@ -24,9 +26,38 @@ const App = () => {
   const [playWord, setplayWord] = useState("");
   const { getAll } = useIndexedDB("words");
 
-  // getting substitles
-  // useEffect(() => {}, []);
+  // getting film list
+  useEffect(() => {
+    const timer= setTimeout(() => {
+      if(filmName!==''){
+        setListStyle({display:'block'});
+        fetch("https://api.opensubtitles.com/api/v1/subtitles?languages=en&query="+filmName,
+      {
+        headers: {
+          'Api-Key': 'mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP'
+        },
+        
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if(data['status'] === 400){
+            console.log('Name is too short');
+          }
+          console.log(data['data']);
+          setMovieList(data['data']);
 
+        })
+        .catch((err) => {
+            console.log('Failed to load');
+        });
+      }else{
+        setListStyle({display:'none'});
+      }     
+    }, 2000);
+  
+    return () => clearTimeout(timer)
+  }, [filmName])
+  
 
   useEffect(() => {
     getAll().then((wordinDb) => {
@@ -71,29 +102,10 @@ const App = () => {
 
 
   const handleSearch = (e: any) =>{
-      setFilmName(e.target.value);
-      fetch("https://api.opensubtitles.com/api/v1/subtitles?languages=en&query="+filmName,
-      {
-        headers: {
-          'Api-Key': 'mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP'
-        },
-        
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if(data['status'] === 400){
-            console.log('Name is too short');
-          }
-          console.log(data['data']);
-          setMovieList(data['data']);
-
-        })
-        .catch((err) => {
-            console.log('Failed to load');
-        });
+      setFilmName(e.target.value);   
   }
 
-  const onFilmClck= (filmId:number)=>{
+  const onFilmClick= (filmId:number)=>{
     console.log(filmId);
     fetch("https://api.opensubtitles.com/api/v1/download",
       {
@@ -143,29 +155,8 @@ const App = () => {
         <div className="title">
           <h2>Word Library</h2>
           <h4>Learn new english words, before watching a film!</h4>
-          <div className="film-search">
-            <div className="search-box">
-              
-                <input
-                  type="text"
-                  name="film-name"
-                  placeholder="Enter Film Name"
-                  onChange={handleSearch}
-                />
-                {/* <button onClick={handleSearchClick}>Search</button> */}
+          <SearchBox handleSearch={handleSearch} movieList={movieList} onFilmClick={onFilmClick} listStyle={listStyle} />
 
-                <br />
-                <ul className="film-list">   
-                {movieList? movieList.map(movie=>{
-                  return <li key={movie['id']} onClick={()=>{onFilmClck(movie['attributes']['files'][0]['file_id'])}}>{movie['attributes']['feature_details']['movie_name']}</li>
-                }):'no films'}
-                </ul>
-              
-            </div>
-
-            {/* user film ekak click karma eken opensubtitle ekata post request ekak yawala sus dowload kargnna */}
-
-          </div>
           <div className="file-input">
             <label className="file-button" htmlFor="file">
               Upload Subtitle
