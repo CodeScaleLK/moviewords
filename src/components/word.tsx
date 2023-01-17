@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useIndexedDB } from "react-indexed-db";
 import play from "../images/icons/play.png";
+import { Tooltip } from "react-tooltip";
 
 const Word = ({
   item,
@@ -39,6 +40,8 @@ const Word = ({
     }
   }, [disable, invert]);
 
+
+
   const markWord = () => {
     if (disable) return;
     setmarked(!marked);
@@ -70,16 +73,28 @@ const Word = ({
             ? "marked-word"
             : "word"
         }
+        id="word"
       >
-        <p className="p-words" onClick={() => markWord()}>
+        {/* <p className="p-words" onClick={() => markWord()}>
           {item}
-        </p>
+        </p> */}
+        <p id={item} className="p-words" onClick={() => markWord()}>{item}</p>
+        <Tooltip anchorId={item} place="top"  >
+
+          <ul>
+            <li></li>
+          </ul>
+          <img src={play} alt="play" className="play"></img> {item}
+
+        </Tooltip>
         {option === 1 && (
           <div className="playable">
             <img src={play} alt="play" className="play"></img> {item}
           </div>
         )}
       </div>
+      
+      
     </>
   );
 };

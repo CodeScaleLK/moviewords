@@ -5,21 +5,20 @@ import Word from "./components/word";
 import { initDB, useIndexedDB } from "react-indexed-db";
 import { DBConfig } from "./DBConfig";
 import AddToHomeScreen from "@ideasio/add-to-homescreen-react";
-import SearchBox from "./components/SearchBox";
+import HomePage from "./components/HomePage";
+import MyWords from "./components/MyWords";
+import WordList from "./components/WordList";
 import logo from "./images/icons/logo512.png";
 import closeIco from "./images/icons/close.svg";
-import uploadIcon from "./images/icons/upload.svg";
-import searchIcon from "./images/icons/search.svg";
-import showWordsIcon from "./images/icons/showwords.svg";
-import buyMeCoffee from "./images/bmc.png";
-import paypal from "./images/paypal.png";
 import { cachedDataVersionTag } from "v8";
+import { Tooltip } from "react-tooltip";
 
 const unique = require("unique-words");
 
 initDB(DBConfig);
 
 const App = () => {
+  const [currentPage,setCurrentPage]= useState('home');
   const [filmName,setFilmName]= useState('');
   const [movieList, setMovieList]= useState([]);
   const [listStyle, setListStyle] = useState({display:'none'});
@@ -30,7 +29,7 @@ const App = () => {
   const [widge, setwidge] = useState(false);
   const [playWord, setplayWord] = useState("");
   const { getAll } = useIndexedDB("words");
-
+  
   // getting film list
   useEffect(() => {
     const timer= setTimeout(() => {
@@ -79,6 +78,7 @@ const App = () => {
   };
 
   const readFile = (file: any) => {
+    setCurrentPage('wordlist');
     var reader = new FileReader();
     reader.onload = (event) => {
       var srt = event.target?.result;
@@ -97,8 +97,10 @@ const App = () => {
 
     reader.readAsText(file);
   };
+
   const uploadFile =  (e:any)=>{
     readFile(e.target.files[0])
+    
   }
   const youGlish = (item: string) => {
     setplayWord(item);
@@ -139,6 +141,54 @@ const App = () => {
         });
     
   }
+  let displayPage = 
+  <HomePage 
+  handleSearch={handleSearch}
+  movieList={movieList}
+  onFilmClick={onFilmClick}
+  listStyle={listStyle}
+  uploadFile={uploadFile}
+  setCurrentPage={setCurrentPage}
+
+  />
+  switch (currentPage) {
+    case 'home':
+      displayPage = 
+        <HomePage 
+        handleSearch={handleSearch}
+        movieList={movieList}
+        onFilmClick={onFilmClick}
+        listStyle={listStyle}
+        uploadFile={uploadFile}
+        setCurrentPage={setCurrentPage}
+        />
+      break;
+    case 'mywords':
+      displayPage = <MyWords existingWords={existingWords} />
+      break;
+    case 'wordlist':
+      displayPage= 
+      <WordList 
+        existingWords={existingWords}
+        words={words}
+        selectAllWords={selectAllWords}
+        removedWords={removedWords}
+        youGlish={youGlish}
+        selectAll={selectAll}
+        />
+      break;
+    default:
+      displayPage = 
+        <HomePage 
+        handleSearch={handleSearch}
+        movieList={movieList}
+        onFilmClick={onFilmClick}
+        listStyle={listStyle}
+        uploadFile={uploadFile}
+        setCurrentPage={setCurrentPage}
+        />
+      break;
+  }
 
   return (
     <>
@@ -158,115 +208,7 @@ const App = () => {
       </div>
 
       <div className="content">
-        <div className="title">
-          <h2>Film Words</h2>
-          <h4>Learn new english words, before watching a film!</h4>
-
-          <SearchBox handleSearch={handleSearch} movieList={movieList} onFilmClick={onFilmClick} listStyle={listStyle} />
-          <div className="icon-row">
-            <img className="icon-style" src={searchIcon} alt="search-icon"  />
-              <label htmlFor="file">
-                <img src={uploadIcon} alt="upload-icon" className="icon-style"  />
-              </label>
-              <input
-                type="file"
-                name="file"
-                accept=".vtt,pdf,.srt,.txt,.svb,.ttml,.dfxp"
-                id="file"
-                onChange={uploadFile}
-              />
-            <img className="icon-style" src={showWordsIcon} alt="show-words-icon"  />
-          </div>
-        </div>
-        {/* <div className="words-counts">
-          <p>{`New Words: ${words.length}`}</p>
-          <p>{`Learned Words: ${existingWords?.length}`}</p>
-        </div>
-        {words.length === 0 && existingWords.length === 0 && (
-          <div className="toast">
-            <p>Please upload a subtitle file first!</p>
-          </div>
-        )}
-        {words.length !== 0 && existingWords.length === 0 && (
-          <div className="toast">
-            <p>
-              {!selectAllWords
-                ? `Please add words to your library by selecting words you already
-              know!`
-                : `Please remove words from your library by selecting words you don't know yet!`}
-            </p>
-          </div>
-        )}
-        {words.length !== 0 && (
-          <>
-            <div className="red-color new-set">
-              <p className="red-sub">New words in this file!</p>
-              <button className="add-all-btn" onClick={() => selectAll()}>
-                {selectAllWords ? `Remove all` : `Add all`}
-              </button>
-            </div>
-            <div className="words-box">
-              {words.map((item, index) => (
-                <Word
-                  disable={false}
-                  invert={selectAllWords}
-                  option={1}
-                  key={index}
-                  item={item}
-                  youGlish={(item: string) => youGlish(item)}
-                />
-              ))}
-            </div>
-          </>
-        )}
-        {removedWords && removedWords.length !== 0 && (
-          <>
-            <p className="sub-title blue-color">Learned words in this file!</p>
-            <div className="words-box">
-              {removedWords?.map((item, index) => (
-                <Word
-                  disable
-                  option={2}
-                  invert={false}
-                  key={index}
-                  item={item}
-                />
-              ))}
-            </div>
-          </>
-        )}
-
-        {existingWords && existingWords.length !== 0 && (
-          <>
-            <p className="sub-title green-color">All words you already know!</p>
-            <div className="words-box">
-              {existingWords.map((item, index) => (
-                <Word
-                  disable
-                  option={3}
-                  invert={false}
-                  key={index}
-                  item={item}
-                />
-              ))}
-            </div>
-          </>
-        )}
-        {((existingWords && existingWords.length !== 0) ||
-          words.length !== 0) && (
-          <>
-            <h5 className="made-with">Made with ❤️</h5>
-            <h6 className="copy-name">
-              © Lakpriya Senevirathna
-              <br />
-              CodeScale
-            </h6>
-          </>
-        )} */}
-        <div className="donate-row">
-          <img src={buyMeCoffee}  alt="buy_me_coffee" />
-          <img src={paypal}  alt="paypal" />
-        </div>
+        {displayPage} 
       </div>
       <AddToHomeScreen
         appId="Word Library"

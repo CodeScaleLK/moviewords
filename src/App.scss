@@ -17,7 +17,6 @@ body {
   justify-content: center;
   align-items: center;
   margin: auto;
-  height: 80vh;
   max-width: 1200px;
 }
 
@@ -26,24 +25,26 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  height: 80vh;
   color: #3C3C3C;
 
-  h2 {
-    margin-top: 50px;
-    margin-bottom: 0;
-    font-weight: 900;
-    text-align: center;
-    font-size: 84px;
-    font-family: Nunito, serif;
-  }
+  
+}
 
-  h4 {
-    max-width: 400px;
-    margin: 15px 20px 0;
-    text-align: center;
-    font-size: 24px;
-    font-family: Nunito, serif;
-  }
+.title-h2 {
+  margin-top: 50px;
+  margin-bottom: 0;
+  font-weight: 900;
+  text-align: center;
+  font-size: 84px;
+  font-family: Nunito, serif;
+}
+
+.title-h4 {
+  margin-top: 0;
+  text-align: center;
+  font-size: 24px;
+  font-family: Nunito, serif;
 }
 
 .youglish_open {
@@ -292,13 +293,14 @@ input[type="file"] {
   .icon-style{
     cursor: pointer;
     height: 50px;
-    margin: 0 20px ;
+    margin: 0 10px ;
   }
 }
 .donate-row{
   position: fixed;  
   bottom: 20px;  
   text-align: center;
+  display: block;
   img{
     height: 35px;
     margin: 0 10px;
