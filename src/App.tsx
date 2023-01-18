@@ -17,201 +17,209 @@ const unique = require("unique-words");
 initDB(DBConfig);
 
 const App = () => {
-  const [currentPage,setCurrentPage]= useState('home');
-  const [filmName,setFilmName]= useState('');
-  const [movieList, setMovieList]= useState([]);
-  const [listStyle, setListStyle] = useState({display:'none'});
-  const [words, setwords] = useState([]);
-  const [existingWords, setexistingWords] = useState<any[]>([]);
-  const [removedWords, setremovedWords] = useState<any[]>([]);
-  const [selectAllWords, setselectAllWords] = useState(false);
-  const [widge, setwidge] = useState(false);
-  const [playWord, setplayWord] = useState("");
+  const [currentPage, setCurrentPage] = useState("home");
+  const [filmName, setFilmName] = useState("");
+  const [movieList, setMovieList] = useState([]);
+  const [listStyle, setListStyle] = useState({ display: "none" });
+  const [words, setWords] = useState([]);
+  const [existingWords, setExistingWords] = useState<any[]>([]);
+  const [removedWords, setRemovedWords] = useState<any[]>([]);
+  const [selectAllWords, setSelectAllWords] = useState(false);
+  const [widget, setWidget] = useState(false);
+  const [playWord, setPlayWord] = useState("");
   const { getAll } = useIndexedDB("words");
-  
+
   // getting film list
   useEffect(() => {
-    const timer= setTimeout(() => {
-      if(filmName!==''){
-        setListStyle({display:'block'});
-        fetch("https://api.opensubtitles.com/api/v1/subtitles?languages=en&query="+filmName,
-      {
-        headers: {
-          'Api-Key': 'mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP'
-        },
-        
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if(data['status'] === 400){
-            console.log('Name is too short');
+    const timer = setTimeout(() => {
+      if (filmName !== "") {
+        setListStyle({ display: "block" });
+        fetch(
+          "https://api.opensubtitles.com/api/v1/subtitles?languages=en&query=" +
+            filmName,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Api-Key": "mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Credentials": "true",
+            },
           }
-          let filmList= data?data['data'].map((item:any)=>(
-            {
-              film_id:item['id'],
-              file_id:item['attributes']['files'][0]['file_id'],
-              name:item['attributes']['feature_details']['title'],
-              year:item['attributes']['feature_details']['year'],
-              img:item['attributes']['related_links'][0]['img_url'],
-          })):{};
-
-          const uniqueNames = [''];
-
-          const uniqueFilms = filmList.filter((element:any) => {
-            const isDuplicate = uniqueNames.includes(element.name);
-
-            if (!isDuplicate) {
-              uniqueNames.push(element.name);
-
-              return true;
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            if (data["status"] === 400) {
+              console.log("Name is too short");
             }
-
-            return false;
+            let filmList = data
+              ? data["data"].map((item: any) => ({
+                  film_id: item["id"],
+                  file_id: item["attributes"]["files"][0]["file_id"],
+                  name: item["attributes"]["feature_details"]["title"],
+                  year: item["attributes"]["feature_details"]["year"],
+                  img: item["attributes"]["related_links"][0]["img_url"],
+                }))
+              : {};
+            const uniqueNames = [""];
+            const uniqueFilms = filmList.filter((element: any) => {
+              const isDuplicate = uniqueNames.includes(element.name);
+              if (!isDuplicate) {
+                uniqueNames.push(element.name);
+                return true;
+              }
+              return false;
+            });
+            setMovieList(uniqueFilms);
+          })
+          .catch((err) => {
+            console.log("Failed to load");
           });
-
-          console.log(uniqueFilms);
-          
-          setMovieList(uniqueFilms);
-
-
-        })
-        .catch((err) => {
-            console.log('Failed to load');
-        });
-      }else{
-        setListStyle({display:'none'});
-      }     
+      } else {
+        setListStyle({ display: "none" });
+      }
     }, 2000);
-  
-    return () => clearTimeout(timer)
-  }, [filmName])
-  
+
+    return () => clearTimeout(timer);
+  }, [filmName]);
 
   useEffect(() => {
-    getAll().then((wordinDb) => {
+    getAll().then((wordInDB) => {
       var wordsDataArray: any[] = [];
-      wordinDb.forEach((item) => {
+      wordInDB.forEach((item) => {
         wordsDataArray.push(item?.word);
       });
-      setexistingWords(wordsDataArray);
+      setExistingWords(wordsDataArray);
     });
-  }, [setexistingWords]);
+  }, [getAll, setExistingWords]);
 
   const selectAll = () => {
-    setselectAllWords(!selectAllWords);
+    setSelectAllWords(!selectAllWords);
   };
 
   const readFile = (file: any) => {
-    setCurrentPage('wordlist');
+    setCurrentPage("wordlist");
     var reader = new FileReader();
     reader.onload = (event) => {
       var srt = event.target?.result;
       var srtLower = typeof srt === "string" ? srt.toLowerCase() : srt;
-      var uniquewords = unique(srtLower);
-      var wordsAll = uniquewords.filter((str: any) =>
+      var uniqueWords = unique(srtLower);
+      var wordsAll = uniqueWords.filter((str: any) =>
         str.match(/^(?:(?![0-9]).){2,}$/)
       );
       var removeOb: any = {};
       existingWords?.forEach((e) => (removeOb[e] = true));
       var newWords = wordsAll.filter((v: any) => !removeOb[v]);
-      var removedw = wordsAll.filter((v: any) => removeOb[v]);
-      setremovedWords(removedw);
-      setwords(newWords);
+      var removeDW = wordsAll.filter((v: any) => removeOb[v]);
+      setRemovedWords(removeDW);
+      setWords(newWords);
     };
 
     reader.readAsText(file);
   };
 
-  const uploadFile =  (e:any)=>{
-    readFile(e.target.files[0])
-    
-  }
+  const uploadFile = (e: any) => {
+    readFile(e.target.files[0]);
+  };
   const youGlish = (item: string) => {
-    setplayWord(item);
-    setwidge(!widge);
+    setPlayWord(item);
+    setWidget(!widget);
   };
 
+  const handleSearch = (e: any) => {
+    setFilmName(e.target.value);
+  };
 
-  const handleSearch = (e: any) =>{
-      setFilmName(e.target.value);   
-  }
-
-  const onFilmClick= (filmId:number)=>{
+  const onFilmClick = (filmId: number) => {
     setFilmName("");
     console.log(filmId);
-    fetch("https://api.opensubtitles.com/api/v1/download",
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Api-Key': 'mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP'
-        },
-        body: '{"file_id":'+filmId+'}'
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data['link']);
-          fetch(data['link'])
-          .then(response => response.text())
-          .then(subtitles => {
-            const file = new File([subtitles], 'subtitles.srt', { type: 'text/plain' });
-            readFile(file);
-    
-          });
-
-        })
-        .catch((err) => {
-            console.log('Failed to download');
+    fetch("https://api.opensubtitles.com/api/v1/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Api-Key": "mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true",
+      },
+      body: '{"file_id":' + filmId + "}",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data["link"], {
+          headers: {
+            "Content-Type": "application/json",
+            "Api-Key": "mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+          },
         });
-    
-  }
-  let displayPage = 
-  <HomePage 
-  handleSearch={handleSearch}
-  movieList={movieList}
-  onFilmClick={onFilmClick}
-  listStyle={listStyle}
-  uploadFile={uploadFile}
-  setCurrentPage={setCurrentPage}
-
-  />
+        fetch(data["link"])
+          .then((response) => response.text())
+          .then((subtitles) => {
+            const file = new File([subtitles], "subtitles.srt", {
+              type: "text/plain",
+            });
+            readFile(file);
+          });
+      })
+      .catch((err) => {
+        console.log("Failed to download");
+      });
+  };
+  let displayPage = (
+    <HomePage
+      handleSearch={handleSearch}
+      movieList={movieList}
+      onFilmClick={onFilmClick}
+      listStyle={listStyle}
+      uploadFile={uploadFile}
+      setCurrentPage={setCurrentPage}
+    />
+  );
   switch (currentPage) {
-    case 'home':
-      displayPage = 
-        <HomePage 
-        handleSearch={handleSearch}
-        movieList={movieList}
-        onFilmClick={onFilmClick}
-        listStyle={listStyle}
-        uploadFile={uploadFile}
-        setCurrentPage={setCurrentPage}
+    case "home":
+      displayPage = (
+        <HomePage
+          handleSearch={handleSearch}
+          movieList={movieList}
+          onFilmClick={onFilmClick}
+          listStyle={listStyle}
+          uploadFile={uploadFile}
+          setCurrentPage={setCurrentPage}
         />
+      );
       break;
-    case 'mywords':
-      displayPage = <MyWords existingWords={existingWords} setCurrentPage={setCurrentPage} />
-      break;
-    case 'wordlist':
-      displayPage= 
-      <WordList 
-        existingWords={existingWords}
-        words={words}
-        selectAllWords={selectAllWords}
-        removedWords={removedWords}
-        youGlish={youGlish}
-        selectAll={selectAll}
-        setCurrentPage={setCurrentPage}
+    case "mywords":
+      displayPage = (
+        <MyWords
+          existingWords={existingWords}
+          setCurrentPage={setCurrentPage}
         />
+      );
+      break;
+    case "wordlist":
+      displayPage = (
+        <WordList
+          existingWords={existingWords}
+          words={words}
+          selectAllWords={selectAllWords}
+          removedWords={removedWords}
+          youGlish={youGlish}
+          selectAll={selectAll}
+          setCurrentPage={setCurrentPage}
+        />
+      );
       break;
     default:
-      displayPage = 
-        <HomePage 
-        handleSearch={handleSearch}
-        movieList={movieList}
-        onFilmClick={onFilmClick}
-        listStyle={listStyle}
-        uploadFile={uploadFile}
-        setCurrentPage={setCurrentPage}
+      displayPage = (
+        <HomePage
+          handleSearch={handleSearch}
+          movieList={movieList}
+          onFilmClick={onFilmClick}
+          listStyle={listStyle}
+          uploadFile={uploadFile}
+          setCurrentPage={setCurrentPage}
         />
+      );
       break;
   }
 
@@ -232,9 +240,7 @@ const App = () => {
         </div>
       </div>
 
-      <div className="content">
-        {displayPage} 
-      </div>
+      <div className="content">{displayPage}</div>
       <AddToHomeScreen
         appId="Word Library"
         startAutomatically={true}

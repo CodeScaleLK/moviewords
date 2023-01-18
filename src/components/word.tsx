@@ -18,12 +18,12 @@ const Word = ({
   youGlish?: Function;
 }) => {
   const { add, deleteRecord } = useIndexedDB("words");
-  const [marked, setmarked] = useState(false);
-  const [meaning,setMeaning]= useState<any[]>([]);
+  const [marked, setMarked] = useState(false);
+  const [meaning, setMeaning] = useState<any[]>([]);
   useEffect(() => {
     if (!disable) {
       if (invert) {
-        setmarked(true);
+        setMarked(true);
         add({ word: item }).then(
           (e) => {
             console.log("Successfully added word: ", e);
@@ -33,7 +33,7 @@ const Word = ({
           }
         );
       } else {
-        setmarked(false);
+        setMarked(false);
         deleteRecord(item).then((e) => {
           console.log("Successfully removed word: ", e);
         });
@@ -41,21 +41,21 @@ const Word = ({
     }
   }, [disable, invert]);
 
-const getMeaning=()=>{
-  fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+item)
-  .then((response) => response.json())
-  .then((data) => {
-    console.log(data);
-    setMeaning(data);
-  }).catch((err) => {
-    console.log('Failed to load');
-});
-}
-
+  const getMeaning = () => {
+    fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + item)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setMeaning(data);
+      })
+      .catch((err) => {
+        console.log("Failed to load");
+      });
+  };
 
   const markWord = () => {
     if (disable) return;
-    setmarked(!marked);
+    setMarked(!marked);
     if (!marked) {
       add({ word: item }).then(
         (e) => {
@@ -84,46 +84,67 @@ const getMeaning=()=>{
             ? "marked-word"
             : "word"
         }
-        
       >
         {/* <p className="p-words" onClick={() => markWord()}>
           {item}
         </p> */}
-        <p id={item} className="p-words" onClick={() => markWord()} onMouseEnter={getMeaning}>{item}</p>
-        <Tooltip anchorId={item} place="top" style={{ backgroundColor: "#fff", color: "#000" }} clickable>
-          
-            {meaning.length>0 && (
-              <>
+        <p
+          id={item}
+          className="p-words"
+          onClick={() => markWord()}
+          onMouseEnter={getMeaning}
+        >
+          {item}
+        </p>
+        <Tooltip
+          anchorId={item}
+          place="top"
+          style={{ backgroundColor: "#fff", color: "#000" }}
+          clickable
+        >
+          {meaning.length > 0 && (
+            <>
               <div className="word-details">
-              <span><b>{meaning[0]['word']}</b></span>
-              &nbsp;
-              <span>{meaning[0]['phonetic']}</span>
-              &nbsp;
-              <img src={speaker} height={20} alt="sound" onClick={()=>{
-                const sound = new Audio(meaning[0]['phonetics'][0]['audio']);
-                sound.play();
-              }} />
-            </div>
-          <div className="word-origin">
-          {meaning[0]['origin']}
-          </div>
-        
-          {meaning[0]["meanings"].map((item:any)=>{
-            return (
-              <dl>
-                <dt>{item["partOfSpeech"]}<img src={downArrow} height={5} alt="" /></dt>
-                <dd><b>definition: </b>{item["definitions"][0]["definition"]}</dd>
-                <dd><b>example: </b>{item["definitions"][0]["example"]}</dd>
-                
-              </dl>
-            );
-          })}
-          
-              </>
+                <span>
+                  <b>{meaning[0]["word"]}</b>
+                </span>
+                &nbsp;
+                <span>{meaning[0]["phonetic"]}</span>
+                &nbsp;
+                <img
+                  src={speaker}
+                  height={20}
+                  alt="sound"
+                  onClick={() => {
+                    const sound = new Audio(
+                      meaning[0]["phonetics"][0]["audio"]
+                    );
+                    sound.play();
+                  }}
+                />
+              </div>
+              <div className="word-origin">{meaning[0]["origin"]}</div>
 
-            )}
-            
-          
+              {meaning[0]["meanings"].map((item: any) => {
+                return (
+                  <dl>
+                    <dt>
+                      {item["partOfSpeech"]}
+                      <img src={downArrow} height={5} alt="" />
+                    </dt>
+                    <dd>
+                      <b>definition: </b>
+                      {item["definitions"][0]["definition"]}
+                    </dd>
+                    <dd>
+                      <b>example: </b>
+                      {item["definitions"][0]["example"]}
+                    </dd>
+                  </dl>
+                );
+              })}
+            </>
+          )}
         </Tooltip>
         {option === 1 && (
           <div className="playable">
@@ -131,8 +152,6 @@ const getMeaning=()=>{
           </div>
         )}
       </div>
-      
-      
     </>
   );
 };

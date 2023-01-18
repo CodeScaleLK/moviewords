@@ -2,6 +2,7 @@
   font-family: "Cousine";
   src: local("Cousine"), url(./fonts/cousin.ttf) format("truetype");
 }
+
 @font-face {
   font-family: "Nunito";
   src: local("Nunito"), url(./fonts/Nunito-Regular.ttf) format("truetype");
@@ -28,7 +29,7 @@ body {
   height: 80vh;
   color: #3C3C3C;
 
-  
+
 }
 
 .title-h2 {
@@ -109,11 +110,12 @@ body {
   }
 }
 
-.p-words:hover + .playable {
+.p-words:hover+.playable {
   display: flex;
   opacity: 100%;
   padding: 10px 10px 10px 0;
   margin-left: -5px;
+
   .play {
     height: 15px;
   }
@@ -123,6 +125,7 @@ body {
   display: flex;
   opacity: 100%;
   padding: 10px 10px 10px 0;
+
   .play {
     height: 15px;
   }
@@ -288,32 +291,37 @@ input[type="file"] {
   }
 }
 
-.icon-row{
-  margin-top: 20px;
-  .icon-style{
+.icon-row {
+  margin-top: 30px;
+
+  .icon-style {
     cursor: pointer;
     height: 50px;
-    margin: 0 10px ;
+    margin: 0 10px;
   }
 }
-.donate-row{
-  position: fixed;  
-  bottom: 20px;  
+
+.donate-row {
+  position: fixed;
+  bottom: 20px;
   text-align: center;
   display: block;
-  img{
+
+  img {
     height: 35px;
     margin: 0 10px;
   }
 }
-.home-icon{
+
+.home-icon {
   height: 40px;
   position: absolute;
   left: 5vw;
   top: 3vh;
   cursor: pointer;
-  
+
 }
+
 @media only screen and (max-width: 500px) {
   .ygParent {
     position: fixed;
@@ -322,4 +330,3 @@ input[type="file"] {
     z-index: 1000;
   }
 }
-
