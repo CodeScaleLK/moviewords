@@ -15,11 +15,14 @@ const Word = ({
   disable: boolean | undefined;
   option: number;
   invert: boolean;
-  youGlish?: Function;
+  youGlish: Function;
 }) => {
   const { add, deleteRecord } = useIndexedDB("words");
   const [marked, setmarked] = useState(false);
   const [meaning,setMeaning]= useState<any[]>([]);
+  const [widge, setwidge] = useState(false);
+  const [playWord, setplayWord] = useState("");
+
   useEffect(() => {
     if (!disable) {
       if (invert) {
@@ -71,9 +74,27 @@ const getMeaning=()=>{
       });
     }
   };
+  const playYouGlish= ()=>{    
+    setplayWord(item);
+    setwidge(!widge);
+  }
 
   return (
     <>
+          <div className="modal_container">
+        <div className="ygParent">
+          <a
+            id="yg-widget-0"
+            className="youglish-widget"
+            data-components="7423"
+            data-delay-load="1"
+            data-toggle-ui="1"
+            href="https://youglish.com"
+          >
+            {" "}
+          </a>
+        </div>
+      </div>
       <div
         className={
           option === 2
@@ -103,6 +124,13 @@ const getMeaning=()=>{
                 const sound = new Audio(meaning[0]['phonetics'][0]['audio']);
                 sound.play();
               }} />
+              &nbsp;
+              {option === 1 && (
+                <span className="playable" >
+                  <img  src={play} height={20} onClick={playYouGlish} alt="" />
+                  {item}
+                </span>
+              )}
             </div>
           <div className="word-origin">
           {meaning[0]['origin']}
@@ -125,11 +153,11 @@ const getMeaning=()=>{
             
           
         </Tooltip>
-        {option === 1 && (
+        {/* {option === 1 && (
           <div className="playable">
             <img src={play} alt="play" className="play"></img> {item}
           </div>
-        )}
+        )} */}
       </div>
       
       

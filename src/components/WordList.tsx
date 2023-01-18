@@ -44,7 +44,7 @@ function WordList(props: any){
                   option={1}
                   key={index}
                   item={item}
-                  youGlish={(item: string) => props.youGlish(item)}
+                  youGlish={props.youGlish}
                 />
 
               ))}
@@ -62,6 +62,7 @@ function WordList(props: any){
                   invert={false}
                   key={index}
                   item={item}
+                  youGlish={props.youGlish}
                 />
               ))}
             </div>

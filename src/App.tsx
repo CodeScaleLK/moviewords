@@ -188,7 +188,7 @@ const App = () => {
         />
       break;
     case 'mywords':
-      displayPage = <MyWords existingWords={existingWords} setCurrentPage={setCurrentPage} />
+      displayPage = <MyWords existingWords={existingWords} setCurrentPage={setCurrentPage} words={words} selectAllWords={selectAllWords} />
       break;
     case 'wordlist':
       displayPage= 

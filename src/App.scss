@@ -102,6 +102,7 @@ body {
   display: flex;
   align-items: center;
   transition: 0.5s ease-in-out;
+  display: inline-block;
 
   .play {
     height: 0;
@@ -112,8 +113,8 @@ body {
 .p-words:hover + .playable {
   display: flex;
   opacity: 100%;
-  padding: 10px 10px 10px 0;
-  margin-left: -5px;
+  // padding: 10px 10px 10px 0;
+  // margin-left: -5px;
   .play {
     height: 15px;
   }
@@ -122,7 +123,7 @@ body {
 .playable:hover {
   display: flex;
   opacity: 100%;
-  padding: 10px 10px 10px 0;
+  // padding: 10px 10px 10px 0;
   .play {
     height: 15px;
   }

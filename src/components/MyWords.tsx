@@ -7,13 +7,13 @@ function MyWords(props:any){
 
     return (
         <>
-        
-        {props.existingWords && props.existingWords.length !== 0 && (
-          <>
-            <img src={homeIcon} onClick={()=>{props.setCurrentPage('home')}} className="home-icon" alt="Home" />
+         <img src={homeIcon} onClick={()=>{props.setCurrentPage('home')}} className="home-icon" alt="Home" />
             <h2 className="title-h2">Film Words</h2>
             <h4 className="title-h4">Learn new english words, before watching a film!</h4>
             <p className="sub-title green-color">All words you already know!</p>
+        {props.existingWords && props.existingWords.length !== 0 && (
+          <>
+           
             <div className="words-box">
               {props.existingWords.map((item: any, index: any) => (
                 
@@ -23,6 +23,7 @@ function MyWords(props:any){
                   invert={false}
                   key={index}
                   item={item}
+                  youGlish={props.youGlish}
                 />
               
               ))}
@@ -30,6 +31,16 @@ function MyWords(props:any){
             
 
           </>
+        )}
+        {props.words.length !== 0 && props.existingWords.length === 0 && (
+          <div className="toast">
+            <p>
+              {!props.selectAllWords
+                ? `Please add words to your library by selecting words you already
+              know!`
+                : `Please remove words from your library by selecting words you don't know yet!`}
+            </p>
+          </div>
         )}
         
         </>
