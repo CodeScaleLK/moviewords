@@ -15,7 +15,7 @@ const Word = ({
   disable: boolean | undefined;
   option: number;
   invert: boolean;
-  youGlish: Function;
+  youGlish?: Function;
 }) => {
   const { add, deleteRecord } = useIndexedDB("words");
   const [marked, setMarked] = useState(false);
