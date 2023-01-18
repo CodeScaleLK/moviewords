@@ -15,11 +15,14 @@ const Word = ({
   disable: boolean | undefined;
   option: number;
   invert: boolean;
-  youGlish?: Function;
+  youGlish: Function;
 }) => {
   const { add, deleteRecord } = useIndexedDB("words");
   const [marked, setMarked] = useState(false);
   const [meaning, setMeaning] = useState<any[]>([]);
+  const [widget, setWidget] = useState(false);
+  const [playWord, setPlayWord] = useState("");
+
   useEffect(() => {
     if (!disable) {
       if (invert) {
@@ -71,9 +74,27 @@ const Word = ({
       });
     }
   };
+  const playYouGlish = () => {
+    setPlayWord(item);
+    setWidget(!widget);
+  };
 
   return (
     <>
+      <div className="modal_container">
+        <div className="ygParent">
+          <a
+            id="yg-widget-0"
+            className="youglish-widget"
+            data-components="7423"
+            data-delay-load="1"
+            data-toggle-ui="1"
+            href="https://youglish.com"
+          >
+            {" "}
+          </a>
+        </div>
+      </div>
       <div
         className={
           option === 2
@@ -122,35 +143,42 @@ const Word = ({
                     sound.play();
                   }}
                 />
+                &nbsp;
+                {option === 1 && (
+                  <span className="playable">
+                    <img src={play} height={20} onClick={playYouGlish} alt="" />
+                    {item}
+                  </span>
+                )}
               </div>
-              <div className="word-origin">{meaning[0]["origin"]}</div>
-
-              {meaning[0]["meanings"].map((item: any) => {
-                return (
-                  <dl>
-                    <dt>
-                      {item["partOfSpeech"]}
-                      <img src={downArrow} height={5} alt="" />
-                    </dt>
-                    <dd>
-                      <b>definition: </b>
-                      {item["definitions"][0]["definition"]}
-                    </dd>
-                    <dd>
-                      <b>example: </b>
-                      {item["definitions"][0]["example"]}
-                    </dd>
-                  </dl>
-                );
-              })}
+              <div className="word-origin">
+                {meaning[0]["meanings"].map((item: any) => {
+                  return (
+                    <dl>
+                      <dt>
+                        {item["partOfSpeech"]}
+                        <img src={downArrow} height={5} alt="" />
+                      </dt>
+                      <dd>
+                        <b>definition: </b>
+                        {item["definitions"][0]["definition"]}
+                      </dd>
+                      <dd>
+                        <b>example: </b>
+                        {item["definitions"][0]["example"]}
+                      </dd>
+                    </dl>
+                  );
+                })}
+              </div>
             </>
           )}
         </Tooltip>
-        {option === 1 && (
+        {/* {option === 1 && (
           <div className="playable">
             <img src={play} alt="play" className="play"></img> {item}
           </div>
-        )}
+        )} */}
       </div>
     </>
   );
