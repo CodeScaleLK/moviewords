@@ -2,6 +2,7 @@ import React from "react";
 import Word from "./word";
 import buyMeCoffee from "./../images/bmc.png";
 import paypal from "./../images/paypal.png";
+import homeIcon from "./../images/icons/home.svg";
 function MyWords(props:any){
 
     return (
@@ -9,6 +10,7 @@ function MyWords(props:any){
         
         {props.existingWords && props.existingWords.length !== 0 && (
           <>
+            <img src={homeIcon} onClick={()=>{props.setCurrentPage('home')}} className="home-icon" alt="Home" />
             <h2 className="title-h2">Film Words</h2>
             <h4 className="title-h4">Learn new english words, before watching a film!</h4>
             <p className="sub-title green-color">All words you already know!</p>

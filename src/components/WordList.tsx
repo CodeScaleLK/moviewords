@@ -1,11 +1,12 @@
 import React from "react";
 import Word from "./word";
-
+import homeIcon from "./../images/icons/home.svg";
 
 function WordList(props: any){
 
     return (
         <>
+        <img src={homeIcon} onClick={()=>{props.setCurrentPage('home')}} className="home-icon" alt="Home" />
         <h2 className="title-h2">Film Words</h2>
         <h4 className="title-h4">Learn new english words, before watching a film!</h4>
         <div className="words-counts">

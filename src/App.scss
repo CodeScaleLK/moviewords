@@ -306,6 +306,14 @@ input[type="file"] {
     margin: 0 10px;
   }
 }
+.home-icon{
+  height: 40px;
+  position: absolute;
+  left: 5vw;
+  top: 3vh;
+  cursor: pointer;
+  
+}
 @media only screen and (max-width: 500px) {
   .ygParent {
     position: fixed;

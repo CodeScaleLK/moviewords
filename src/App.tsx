@@ -188,7 +188,7 @@ const App = () => {
         />
       break;
     case 'mywords':
-      displayPage = <MyWords existingWords={existingWords} />
+      displayPage = <MyWords existingWords={existingWords} setCurrentPage={setCurrentPage} />
       break;
     case 'wordlist':
       displayPage= 
@@ -199,6 +199,7 @@ const App = () => {
         removedWords={removedWords}
         youGlish={youGlish}
         selectAll={selectAll}
+        setCurrentPage={setCurrentPage}
         />
       break;
     default:

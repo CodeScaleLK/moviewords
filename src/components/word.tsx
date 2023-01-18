@@ -47,7 +47,6 @@ const getMeaning=()=>{
   .then((data) => {
     console.log(data);
     setMeaning(data);
-    
   }).catch((err) => {
     console.log('Failed to load');
 });
@@ -96,11 +95,14 @@ const getMeaning=()=>{
             {meaning.length>0 && (
               <>
               <div className="word-details">
-              <span>{meaning[0]['word']}</span>
+              <span><b>{meaning[0]['word']}</b></span>
               &nbsp;
               <span>{meaning[0]['phonetic']}</span>
               &nbsp;
-              <img src={speaker} height={20} alt="" />
+              <img src={speaker} height={20} alt="sound" onClick={()=>{
+                const sound = new Audio(meaning[0]['phonetics'][0]['audio']);
+                sound.play();
+              }} />
             </div>
           <div className="word-origin">
           {meaning[0]['origin']}
@@ -116,6 +118,7 @@ const getMeaning=()=>{
               </dl>
             );
           })}
+          
               </>
 
             )}
