@@ -31,9 +31,13 @@ const App = () => {
 
   // getting film list
   useEffect(() => {
+    if (filmName !== "") {
+      setListStyle({ display: "block" });
+    } else {
+      setMovieList([]);
+    }
     const timer = setTimeout(() => {
       if (filmName !== "") {
-        setListStyle({ display: "block" });
         fetch(
           "https://api.opensubtitles.com/api/v1/subtitles?languages=en&query=" +
             filmName,
@@ -48,6 +52,7 @@ const App = () => {
         )
           .then((response) => response.json())
           .then((data) => {
+            console.log("+====", data);
             if (data["status"] === 400) {
               console.log("Name is too short");
             }
@@ -55,9 +60,12 @@ const App = () => {
               ? data["data"].map((item: any) => ({
                   film_id: item["id"],
                   file_id: item["attributes"]["files"][0]["file_id"],
-                  name: item["attributes"]["feature_details"]["title"],
+                  title: item["attributes"]["feature_details"]["title"],
+                  name: item["attributes"]["feature_details"]["movie_name"],
                   year: item["attributes"]["feature_details"]["year"],
-                  img: item["attributes"]["related_links"][0]["img_url"],
+                  img: item?.["attributes"]?.["related_links"]?.[0]?.[
+                    "img_url"
+                  ],
                 }))
               : {};
             const uniqueNames = [""];

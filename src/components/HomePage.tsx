@@ -11,15 +11,35 @@ const HomePage = (props: any) => {
     props.setCurrentPage("mywords");
   };
 
+  function onImgErrorSmall(source: any) {
+    source.target.src = "https://i.ibb.co/Sm82NLv/film-empty.png";
+    // disable onerror to prevent endless loop
+    source.onerror = "";
+    return true;
+  }
+
   const renderFilms = (movie: any, index: number) => {
     const handleOnClick = () => {
       props.onFilmClick(movie.file_id);
     };
     return (
-      <div className="movie-item" key={index} onClick={handleOnClick}>
-        <img src={movie.img} alt="movie icon" height={80} width={55} />
+      <div
+        className="movie-item"
+        style={index == 0 ? { marginTop: 10 } : {}}
+        key={index}
+        onClick={handleOnClick}
+      >
+        <img
+          src={movie.img}
+          placeholder="https://i.ibb.co/Sm82NLv/film-empty.png"
+          alt="movie icon"
+          onError={onImgErrorSmall}
+          height={80}
+          width={55}
+        />
         <div className="film-details">
-          <div className="film-name">{movie.name}</div>
+          <div className="film-name">{movie.title}</div>
+          <div className="film-year">{movie.name}</div>
           <div className="film-year">{movie.year}</div>
         </div>
       </div>
@@ -43,7 +63,13 @@ const HomePage = (props: any) => {
               onChange={props.handleSearch}
             />
             <ul className="film-list" style={props.listStyle}>
-              {props.movieList ? props.movieList.map(renderFilms) : ""}
+              {props.movieList.length > 0 ? (
+                props.movieList.map(renderFilms)
+              ) : (
+                <div className="loader_wrap">
+                  <div className="loader"></div>
+                </div>
+              )}
             </ul>
           </div>
         </div>

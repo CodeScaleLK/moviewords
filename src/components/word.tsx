@@ -120,53 +120,70 @@ const Word = ({
         <Tooltip
           anchorId={item}
           place="top"
-          style={{ backgroundColor: "#fff", color: "#000" }}
+          delayHide={1000}
+          delayShow={500}
+          style={{
+            backgroundColor: "#D9FFD9",
+            color: "#000",
+            borderRadius: "10px",
+            opacity: 1,
+          }}
           clickable
         >
           {meaning.length > 0 && (
             <>
               <div className="word-details">
-                <span>
-                  <b>{meaning[0]["word"]}</b>
-                </span>
-                &nbsp;
-                <span>{meaning[0]["phonetic"]}</span>
-                &nbsp;
-                <img
-                  src={speaker}
-                  height={20}
-                  alt="sound"
-                  onClick={() => {
-                    const sound = new Audio(
-                      meaning[0]["phonetics"][0]["audio"]
-                    );
-                    sound.play();
-                  }}
-                />
-                &nbsp;
-                {option === 1 && (
-                  <span className="playable">
-                    <img src={play} height={20} onClick={playYouGlish} alt="" />
-                    {item}
+                <div className="meaning_wrap">
+                  <span className="wd_element tooltip_word">
+                    <b>{meaning[0]?.["word"]}</b>
                   </span>
-                )}
+                  &nbsp;
+                  <span className="wd_element">{meaning[0]?.["phonetic"]}</span>
+                  &nbsp;
+                  {meaning[0]?.["phonetics"]?.[0]?.["audio"] && (
+                    <span className="wd_element">
+                      <img
+                        src={speaker}
+                        height={20}
+                        alt="sound"
+                        onClick={() => {
+                          const sound = new Audio(
+                            meaning[0]?.["phonetics"]?.[0]?.["audio"]
+                          );
+                          sound.play();
+                        }}
+                      />
+                    </span>
+                  )}
+                  &nbsp;
+                  {option === 1 && (
+                    <span className="playable wd_element">
+                      <img
+                        src={play}
+                        height={20}
+                        onClick={playYouGlish}
+                        alt=""
+                      />
+                      {item}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="word-origin">
-                {meaning[0]["meanings"].map((item: any) => {
+                {meaning[0]?.["meanings"].map((item: any, index: number) => {
                   return (
-                    <dl>
-                      <dt>
-                        {item["partOfSpeech"]}
-                        <img src={downArrow} height={5} alt="" />
-                      </dt>
+                    <dl key={index}>
+                      <dt>{item?.["partOfSpeech"]}</dt>
                       <dd>
                         <b>definition: </b>
-                        {item["definitions"][0]["definition"]}
+                        {item?.["definitions"]?.[0]?.["definition"]}
                       </dd>
-                      <dd>
-                        <b>example: </b>
-                        {item["definitions"][0]["example"]}
-                      </dd>
+                      {item?.["definitions"]?.[0]?.["example"] && (
+                        <dd>
+                          <b>example: </b>
+                          {item?.["definitions"]?.[0]?.["example"]}
+                        </dd>
+                      )}
                     </dl>
                   );
                 })}
@@ -174,11 +191,6 @@ const Word = ({
             </>
           )}
         </Tooltip>
-        {/* {option === 1 && (
-          <div className="playable">
-            <img src={play} alt="play" className="play"></img> {item}
-          </div>
-        )} */}
       </div>
     </>
   );

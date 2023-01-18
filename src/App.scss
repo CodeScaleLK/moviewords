@@ -97,40 +97,49 @@ body {
 }
 
 .playable {
-  cursor: pointer;
   font-size: 0;
-  padding: 0 0 0 0;
-  display: flex;
-  align-items: center;
-  transition: 0.5s ease-in-out;
-  display: inline-block;
 
   .play {
     height: 0;
-    transition: 0.5s ease-in-out;
   }
 }
 
-.p-words:hover+.playable {
-  display: flex;
-  opacity: 100%;
+.word-details {
+  .meaning_wrap {
+    display: flex;
+    align-items: center;
 
-  // padding: 10px 10px 10px 0;
-  // margin-left: -5px;
-  .play {
-    height: 15px;
+    .tooltip_word {
+      font-size: 25px;
+    }
+
+    .wd_element {
+      margin-right: 10px;
+      display: flex;
+    }
   }
 }
 
-.playable:hover {
-  display: flex;
-  opacity: 100%;
+// .p-words:hover+.playable {
+//   display: flex;
+//   opacity: 100%;
 
-  // padding: 10px 10px 10px 0;
-  .play {
-    height: 15px;
-  }
-}
+//   // padding: 10px 10px 10px 0;
+//   // margin-left: -5px;
+//   .play {
+//     height: 15px;
+//   }
+// }
+
+// .playable {
+//   display: flex;
+//   opacity: 100%;
+
+//   // padding: 10px 10px 10px 0;
+//   .play {
+//     height: 15px;
+//   }
+// }
 
 .words-box {
   display: flex;
