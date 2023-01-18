@@ -11,7 +11,6 @@ import WordList from "./components/WordList";
 import logo from "./images/icons/logo512.png";
 import closeIco from "./images/icons/close.svg";
 import { cachedDataVersionTag } from "v8";
-import { Tooltip } from "react-tooltip";
 
 const unique = require("unique-words");
 
@@ -47,8 +46,33 @@ const App = () => {
           if(data['status'] === 400){
             console.log('Name is too short');
           }
-          console.log(data['data']);
-          setMovieList(data['data']);
+          let filmList= data?data['data'].map((item:any)=>(
+            {
+              film_id:item['id'],
+              file_id:item['attributes']['files'][0]['file_id'],
+              name:item['attributes']['feature_details']['title'],
+              year:item['attributes']['feature_details']['year'],
+              img:item['attributes']['related_links'][0]['img_url'],
+          })):{};
+
+          const uniqueNames = [''];
+
+          const uniqueFilms = filmList.filter((element:any) => {
+            const isDuplicate = uniqueNames.includes(element.name);
+
+            if (!isDuplicate) {
+              uniqueNames.push(element.name);
+
+              return true;
+            }
+
+            return false;
+          });
+
+          console.log(uniqueFilms);
+          
+          setMovieList(uniqueFilms);
+
 
         })
         .catch((err) => {

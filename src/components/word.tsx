@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useIndexedDB } from "react-indexed-db";
 import play from "../images/icons/play.png";
 import { Tooltip } from "react-tooltip";
-
+import speaker from "../images/icons/speaker.svg";
+import downArrow from "../images/icons/down.svg";
 const Word = ({
   item,
   disable = false,
@@ -18,7 +19,7 @@ const Word = ({
 }) => {
   const { add, deleteRecord } = useIndexedDB("words");
   const [marked, setmarked] = useState(false);
-
+  const [meaning,setMeaning]= useState<any[]>([]);
   useEffect(() => {
     if (!disable) {
       if (invert) {
@@ -40,6 +41,17 @@ const Word = ({
     }
   }, [disable, invert]);
 
+const getMeaning=()=>{
+  fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+item)
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    setMeaning(data);
+    
+  }).catch((err) => {
+    console.log('Failed to load');
+});
+}
 
 
   const markWord = () => {
@@ -73,19 +85,42 @@ const Word = ({
             ? "marked-word"
             : "word"
         }
-        id="word"
+        
       >
         {/* <p className="p-words" onClick={() => markWord()}>
           {item}
         </p> */}
-        <p id={item} className="p-words" onClick={() => markWord()}>{item}</p>
-        <Tooltip anchorId={item} place="top"  >
+        <p id={item} className="p-words" onClick={() => markWord()} onMouseEnter={getMeaning}>{item}</p>
+        <Tooltip anchorId={item} place="top" style={{ backgroundColor: "#fff", color: "#000" }} clickable>
+          
+            {meaning.length>0 && (
+              <>
+              <div className="word-details">
+              <span>{meaning[0]['word']}</span>
+              &nbsp;
+              <span>{meaning[0]['phonetic']}</span>
+              &nbsp;
+              <img src={speaker} height={20} alt="" />
+            </div>
+          <div className="word-origin">
+          {meaning[0]['origin']}
+          </div>
+        
+          {meaning[0]["meanings"].map((item:any)=>{
+            return (
+              <dl>
+                <dt>{item["partOfSpeech"]}<img src={downArrow} height={5} alt="" /></dt>
+                <dd><b>definition: </b>{item["definitions"][0]["definition"]}</dd>
+                <dd><b>example: </b>{item["definitions"][0]["example"]}</dd>
+                
+              </dl>
+            );
+          })}
+              </>
 
-          <ul>
-            <li></li>
-          </ul>
-          <img src={play} alt="play" className="play"></img> {item}
-
+            )}
+            
+          
         </Tooltip>
         {option === 1 && (
           <div className="playable">

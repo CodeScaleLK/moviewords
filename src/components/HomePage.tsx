@@ -27,19 +27,19 @@ const HomePage= (props : any)=>{
                     <ul className="film-list" style={props.listStyle}>   
                     {props.movieList? props.movieList.map((movie: any)=>{
                         return <li>
-                            <div className="movie-item" key={movie['id']} onClick={()=>{props.onFilmClick(movie['attributes']['files'][0]['file_id'])}}>
+                            <div className="movie-item" key={movie.id} onClick={()=>{props.onFilmClick(movie.file_id)}}>
                                 <img 
-                                src={movie['attributes']['related_links'][0]['img_url']}
+                                src={movie.img}
                                 alt="movie icon"
                                 height={80}
                                 width={55}
                                 />
                                 <div className="film-details">
                                     <div className="film-name">
-                                {movie['attributes']['feature_details']['title']}
+                                {movie.name}
                                     </div>
                                     <div className="film-year">
-                                {movie['attributes']['feature_details']['year']}
+                                {movie.year}
                                     </div>
                                 </div>
                             </div>
