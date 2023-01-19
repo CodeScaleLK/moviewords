@@ -80,7 +80,7 @@ const App = () => {
             setMovieList(uniqueFilms);
           })
           .catch((err) => {
-            console.log("Failed to load");
+            console.log("Failed to load: "+err);
           });
       } else {
         setListStyle({ display: "none" });
@@ -134,7 +134,8 @@ const App = () => {
   };
 
   const handleSearch = (e: any) => {
-    setFilmName(e.target.value);
+    const searchPhrase =e.target.value.replace(/ /g,'' );
+    setFilmName(searchPhrase);
   };
 
   const onFilmClick = (filmId: number) => {
