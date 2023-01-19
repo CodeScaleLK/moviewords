@@ -75,6 +75,9 @@ $inputWidth: 736px;
         .film-name {
             font-weight: bold;
             font-size: 23px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .film-year {
