@@ -11,6 +11,8 @@ import WordList from "./components/WordList";
 import logo from "./images/icons/logo512.png";
 import closeIco from "./images/icons/close.svg";
 import { cachedDataVersionTag } from "v8";
+import buyMeCoffee from "./images/bmc.png";
+import paypal from "./images/paypal.png";
 
 const unique = require("unique-words");
 
@@ -52,7 +54,6 @@ const App = () => {
         )
           .then((response) => response.json())
           .then((data) => {
-            console.log("+====", data);
             if (data["status"] === 400) {
               console.log("Name is too short");
             }
@@ -80,7 +81,7 @@ const App = () => {
             setMovieList(uniqueFilms);
           })
           .catch((err) => {
-            console.log("Failed to load: "+err);
+            console.log("Failed to load: " + err);
           });
       } else {
         setListStyle({ display: "none" });
@@ -134,13 +135,12 @@ const App = () => {
   };
 
   const handleSearch = (e: any) => {
-    const searchPhrase =e.target.value.replace(/ /g,'' );
+    const searchPhrase = e.target.value.replace(/ /g, "");
     setFilmName(searchPhrase);
   };
 
   const onFilmClick = (filmId: number) => {
     setFilmName("");
-    console.log(filmId);
     fetch("https://api.opensubtitles.com/api/v1/download", {
       method: "POST",
       headers: {
@@ -252,6 +252,14 @@ const App = () => {
       </div>
 
       <div className="content">{displayPage}</div>
+      <div className="donate-row">
+        <button>
+          <img src={buyMeCoffee} alt="buy_me_coffee" />
+        </button>
+        <button>
+          <img src={paypal} alt="paypal" />
+        </button>
+      </div>
       <AddToHomeScreen
         appId="Word Library"
         startAutomatically={true}

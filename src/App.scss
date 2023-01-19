@@ -8,6 +8,11 @@
   src: local("Nunito"), url(./fonts/Nunito-Regular.ttf) format("truetype");
 }
 
+@font-face {
+  font-family: "Inter";
+  src: local("Inter"), url(./fonts/Inter-Regular.otf) format("truetype");
+}
+
 body {
   background: #F5F5F5;
 }
@@ -26,19 +31,19 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 80vh;
   color: #3C3C3C;
 
 
 }
 
 .title-h2 {
-  margin-top: 50px;
+  margin-top: 70px;
   margin-bottom: 0;
   font-weight: 900;
   text-align: center;
   font-size: 84px;
   font-family: Nunito, serif;
+  line-height: 1;
 }
 
 .title-h4 {
@@ -303,33 +308,101 @@ input[type="file"] {
 
 .icon-row {
   margin-top: 30px;
+  display: flex;
+  flex-direction: row;
 
-  .icon-style {
+  .icon-buttons {
+    display: inline-block;
+  }
+
+  button {
+    border: 1px solid #3C3C3C;
+    margin: 0 20px;
+    padding: 10px;
     cursor: pointer;
-    height: 50px;
-    margin: 0 10px;
+    background-color: #F5F5F5;
+  }
+
+  button:hover {
+    background-color: #fff;
+  }
+
+  .icon-button {
+    border-radius: 30px;
+    height: 60px;
+    width: 60px;
+
+    .icon-style {
+      height: 20px;
+      cursor: pointer;
+    }
+  }
+
+  .outline-button {
+    height: 60px;
+    width: 223px;
+    border-radius: 30px;
+    padding: auto 10px;
+    text-align: center;
+
+    span {
+      font-size: 20px;
+      font-family: Inter, serif;
+    }
+
+    .icon-style {
+      height: 20px;
+      float: right;
+      margin-right: 15px;
+    }
   }
 }
 
+
 .donate-row {
-  position: fixed;
-  bottom: 20px;
+  margin: 100px auto 20px auto;
   text-align: center;
-  display: block;
+
+  button {
+    cursor: pointer;
+    border: none;
+    background-color: #F5F5F5;
+  }
 
   img {
     height: 35px;
-    margin: 0 10px;
   }
 }
 
 .home-icon {
   height: 40px;
+  width: 100px;
   position: absolute;
   left: 5vw;
   top: 3vh;
   cursor: pointer;
+  background-color: #F5F5F5;
+  border: 1px solid #3C3C3C;
+  border-radius: 20px;
 
+  img {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    float: left;
+    margin-left: 10px;
+    margin-top: 2px;
+    height: 14px;
+  }
+
+  span {
+    font-size: 15px;
+    font-family: Inter, serif;
+  }
+
+}
+
+.home-icon:hover {
+  background-color: #fff;
 }
 
 @media only screen and (max-width: 500px) {
@@ -338,5 +411,17 @@ input[type="file"] {
     max-width: 90%;
     display: none;
     z-index: 1000;
+  }
+
+  .icon-row {
+    flex-direction: column;
+    margin-top: 30px;
+  }
+
+  .icon-buttons {
+    margin-bottom: 20px;
+    display: block;
+    text-align: center;
+
   }
 }

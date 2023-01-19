@@ -1,6 +1,6 @@
 import React from "react";
 import Word from "./word";
-import homeIcon from "./../images/icons/home.svg";
+import arrowIcon from "./../images/icons/arrow.svg";
 
 function WordList(props: any) {
   const handleOnBackClick = () => {
@@ -8,12 +8,11 @@ function WordList(props: any) {
   };
   return (
     <>
-      <img
-        src={homeIcon}
-        onClick={handleOnBackClick}
-        className="home-icon"
-        alt="Home"
-      />
+      <button onClick={handleOnBackClick} className="home-icon">
+        <img src={arrowIcon} alt="Home" />
+        <span>Home</span>
+      </button>
+
       <h2 className="title-h2">Film Words</h2>
       <h4 className="title-h4">
         Learn new english words, before watching a film!

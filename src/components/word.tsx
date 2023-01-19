@@ -127,6 +127,8 @@ const Word = ({
             color: "#000",
             borderRadius: "10px",
             opacity: 1,
+            width: "500px",
+            maxWidth: "90%",
           }}
           clickable
         >
