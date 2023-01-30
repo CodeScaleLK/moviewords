@@ -1,65 +1,243 @@
 import React, { useEffect, useState } from "react";
 import "./App.scss";
 import "./add-to-home.scss";
-import Word from "./components/word";
 import { initDB, useIndexedDB } from "react-indexed-db";
 import { DBConfig } from "./DBConfig";
 import AddToHomeScreen from "@ideasio/add-to-homescreen-react";
+import HomePage from "./components/HomePage";
+import MyWords from "./components/MyWords";
+import WordList from "./components/WordList";
 import logo from "./images/icons/logo512.png";
 import closeIco from "./images/icons/close.svg";
+import { cachedDataVersionTag } from "v8";
+import buyMeCoffee from "./images/bmc.png";
+import paypal from "./images/paypal.png";
 
 const unique = require("unique-words");
 
 initDB(DBConfig);
 
 const App = () => {
-  const [words, setwords] = useState([]);
-  const [existingWords, setexistingWords] = useState<any[]>([]);
-  const [removedWords, setremovedWords] = useState<any[]>([]);
-  const [selectAllWords, setselectAllWords] = useState(false);
-  const [widge, setwidge] = useState(false);
-  const [playWord, setplayWord] = useState("");
+  const [currentPage, setCurrentPage] = useState("home");
+  const [filmName, setFilmName] = useState("");
+  const [movieList, setMovieList] = useState([]);
+  const [searchStart, setSearchStart] = useState(false);
+  const [words, setWords] = useState([]);
+  const [existingWords, setExistingWords] = useState<any[]>([]);
+  const [removedWords, setRemovedWords] = useState<any[]>([]);
+  const [selectAllWords, setSelectAllWords] = useState(false);
+  const [widget, setWidget] = useState(false);
+  const [playWord, setPlayWord] = useState("");
   const { getAll } = useIndexedDB("words");
 
+  // getting film list
   useEffect(() => {
-    getAll().then((wordinDb) => {
+    if (filmName.length > 2) {
+      setSearchStart(true);
+    } else {
+      setMovieList([]);
+      setSearchStart(false);
+    }
+    const timer = setTimeout(() => {
+      if (filmName !== "") {
+        fetch(
+          "https://api.opensubtitles.com/api/v1/subtitles?languages=en&query=" +
+            filmName.toLowerCase(),
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Api-Key": "mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Credentials": "true",
+            },
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            if (data["status"] === 400) {
+              console.log("Name is too short");
+            }
+            let filmList = data
+              ? data["data"].map((item: any) => ({
+                  film_id: item["id"],
+                  file_id: item["attributes"]["files"][0]["file_id"],
+                  title: item["attributes"]["feature_details"]["title"],
+                  name: item["attributes"]["feature_details"]["movie_name"],
+                  year: item["attributes"]["feature_details"]["year"],
+                  img: item?.["attributes"]?.["related_links"]?.[0]?.[
+                    "img_url"
+                  ],
+                }))
+              : {};
+            const uniqueNames = [""];
+            const uniqueFilms = filmList.filter((element: any) => {
+              const isDuplicate = uniqueNames.includes(element.name);
+              if (!isDuplicate) {
+                uniqueNames.push(element.name);
+                return true;
+              }
+              return false;
+            });
+            setMovieList(uniqueFilms);
+          })
+          .catch((err) => {
+            console.log("Failed to load: " + err);
+          });
+      } else {
+        setSearchStart(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [filmName]);
+
+  useEffect(() => {
+    getAll().then((wordInDB) => {
       var wordsDataArray: any[] = [];
-      wordinDb.forEach((item) => {
+      wordInDB.forEach((item) => {
         wordsDataArray.push(item?.word);
       });
-      setexistingWords(wordsDataArray);
+      setExistingWords(wordsDataArray);
     });
-  }, [setexistingWords]);
+  }, [getAll, setExistingWords]);
 
   const selectAll = () => {
-    setselectAllWords(!selectAllWords);
+    setSelectAllWords(!selectAllWords);
   };
 
-  const readFile = (event: any) => {
-    var file = event.target.files[0];
+  const readFile = (file: any) => {
+    setCurrentPage("wordlist");
     var reader = new FileReader();
     reader.onload = (event) => {
       var srt = event.target?.result;
       var srtLower = typeof srt === "string" ? srt.toLowerCase() : srt;
-      var uniquewords = unique(srtLower);
-      var wordsAll = uniquewords.filter((str: any) =>
+      var uniqueWords = unique(srtLower);
+      var wordsAll = uniqueWords.filter((str: any) =>
         str.match(/^(?:(?![0-9]).){2,}$/)
       );
       var removeOb: any = {};
       existingWords?.forEach((e) => (removeOb[e] = true));
       var newWords = wordsAll.filter((v: any) => !removeOb[v]);
-      var removedw = wordsAll.filter((v: any) => removeOb[v]);
-      setremovedWords(removedw);
-      setwords(newWords);
+      var removeDW = wordsAll.filter((v: any) => removeOb[v]);
+      setRemovedWords(removeDW);
+      setWords(newWords);
+      setSearchStart(false);
     };
 
     reader.readAsText(file);
   };
 
-  const youGlish = (item: string) => {
-    setplayWord(item);
-    setwidge(!widge);
+  const uploadFile = (e: any) => {
+    readFile(e.target.files[0]);
   };
+  const youGlish = (item: string) => {
+    setPlayWord(item);
+    setWidget(!widget);
+  };
+
+  const handleSearch = (e: any) => {
+    const searchPhrase = e.target.value.replace(/ /g, "");
+    setFilmName(searchPhrase);
+  };
+
+  const handlePpl = () => window.open("https://paypal.me/lakpriyas");
+
+  const handleBmc = () => window.open("https://www.buymeacoffee.com/lakpriya1");
+
+  const onFilmClick = (filmId: number) => {
+    setSearchStart(true);
+    // setFilmName("");
+    fetch("https://api.opensubtitles.com/api/v1/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Api-Key": "mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true",
+      },
+      body: '{"file_id":' + filmId + "}",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        fetch(data["link"], {
+          headers: {
+            "Content-Type": "application/json",
+            "Api-Key": "mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+          },
+        })
+          .then((response) => response.text())
+          .then((subtitles) => {
+            const file = new File([subtitles], "subtitles.srt", {
+              type: "text/plain",
+            });
+            readFile(file);
+          });
+      })
+      .catch((err) => {
+        console.log("Failed to download");
+      });
+  };
+  let displayPage = (
+    <HomePage
+      handleSearch={handleSearch}
+      movieList={movieList}
+      onFilmClick={onFilmClick}
+      searchStart={searchStart}
+      uploadFile={uploadFile}
+      setCurrentPage={setCurrentPage}
+    />
+  );
+  switch (currentPage) {
+    case "home":
+      displayPage = (
+        <HomePage
+          handleSearch={handleSearch}
+          movieList={movieList}
+          onFilmClick={onFilmClick}
+          searchStart={searchStart}
+          uploadFile={uploadFile}
+          setCurrentPage={setCurrentPage}
+        />
+      );
+      break;
+    case "mywords":
+      displayPage = displayPage = (
+        <MyWords
+          existingWords={existingWords}
+          setCurrentPage={setCurrentPage}
+          words={words}
+          selectAllWords={selectAllWords}
+        />
+      );
+      break;
+    case "wordlist":
+      displayPage = (
+        <WordList
+          existingWords={existingWords}
+          words={words}
+          selectAllWords={selectAllWords}
+          removedWords={removedWords}
+          youGlish={youGlish}
+          selectAll={selectAll}
+          setCurrentPage={setCurrentPage}
+        />
+      );
+      break;
+    default:
+      displayPage = (
+        <HomePage
+          handleSearch={handleSearch}
+          movieList={movieList}
+          onFilmClick={onFilmClick}
+          searchStart={searchStart}
+          uploadFile={uploadFile}
+          setCurrentPage={setCurrentPage}
+        />
+      );
+      break;
+  }
 
   return (
     <>
@@ -78,111 +256,17 @@ const App = () => {
         </div>
       </div>
 
-      <div className="content">
-        <div className="title">
-          <h2>Word Library</h2>
-          <h4>Learn new english words, before watching a film!</h4>
-          <div className="file-input">
-            <label className="file-button" htmlFor="file">
-              Upload Subtitle
-            </label>
-            <input
-              type="file"
-              name="file"
-              accept=".vtt,pdf,.srt,.txt,.svb,.ttml,.dfxp"
-              id="file"
-              onChange={(e) => readFile(e)}
-            />
-          </div>
-        </div>
-        <div className="words-counts">
-          <p>{`New Words: ${words.length}`}</p>
-          <p>{`Learned Words: ${existingWords?.length}`}</p>
-        </div>
-        {words.length === 0 && existingWords.length === 0 && (
-          <div className="toast">
-            <p>Please upload a subtitle file first!</p>
-          </div>
-        )}
-        {words.length !== 0 && existingWords.length === 0 && (
-          <div className="toast">
-            <p>
-              {!selectAllWords
-                ? `Please add words to your library by selecting words you already
-              know!`
-                : `Please remove words from your library by selecting words you don't know yet!`}
-            </p>
-          </div>
-        )}
-        {words.length !== 0 && (
-          <>
-            <div className="red-color new-set">
-              <p className="red-sub">New words in this file!</p>
-              <button className="add-all-btn" onClick={() => selectAll()}>
-                {selectAllWords ? `Remove all` : `Add all`}
-              </button>
-            </div>
-            <div className="words-box">
-              {words.map((item, index) => (
-                <Word
-                  disable={false}
-                  invert={selectAllWords}
-                  option={1}
-                  key={index}
-                  item={item}
-                  youGlish={(item: string) => youGlish(item)}
-                />
-              ))}
-            </div>
-          </>
-        )}
-        {removedWords && removedWords.length !== 0 && (
-          <>
-            <p className="sub-title blue-color">Learned words in this file!</p>
-            <div className="words-box">
-              {removedWords?.map((item, index) => (
-                <Word
-                  disable
-                  option={2}
-                  invert={false}
-                  key={index}
-                  item={item}
-                />
-              ))}
-            </div>
-          </>
-        )}
-
-        {existingWords && existingWords.length !== 0 && (
-          <>
-            <p className="sub-title green-color">All words you already know!</p>
-            <div className="words-box">
-              {existingWords.map((item, index) => (
-                <Word
-                  disable
-                  option={3}
-                  invert={false}
-                  key={index}
-                  item={item}
-                />
-              ))}
-            </div>
-          </>
-        )}
-        {((existingWords && existingWords.length !== 0) ||
-          words.length !== 0) && (
-          <>
-            <h5 className="made-with">Made with ❤️</h5>
-            <h6 className="copy-name">
-              © Lakpriya Senevirathna
-              <br />
-              CodeScale
-            </h6>
-          </>
-        )}
+      <div className="content">{displayPage}</div>
+      <div className="donate-row">
+        <button className="outline-button" onClick={handleBmc}>
+          <img src={buyMeCoffee} alt="buy_me_coffee" />
+        </button>
+        <button className="outline-button" onClick={handlePpl}>
+          <img src={paypal} alt="paypal" />
+        </button>
       </div>
       <AddToHomeScreen
-        appId="Word Library"
+        appId="Movie Words"
         startAutomatically={true}
         startDelay={0}
         lifespan={300}
@@ -190,9 +274,9 @@ const App = () => {
         skipFirstVisit={false}
         displayPace={0}
         customPromptContent={{
-          title: "Do you want to install Word Library on your device?",
+          title: "Do you want to install Movie Words on your device?",
           cancelMsg: "",
-          installMsg: "Yes, sure!",
+          installMsg: "Install",
           guidanceCancelMsg: "Dismiss",
           src: logo,
         }}
