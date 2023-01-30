@@ -12,10 +12,8 @@ function MyWords(props: any) {
         <span>Home</span>
       </button>
 
-      <h2 className="title-h2">Film Words</h2>
-      <h4 className="title-h4">
-        Learn new english words, before watching a film!
-      </h4>
+      <h2 className="title-h2">Movie Words</h2>
+      <h4 className="title-h4">Enhance your English vocabulary with movies!</h4>
       <p className="sub-title green-color">All words you already know!</p>
       {props.existingWords && props.existingWords.length !== 0 && (
         <>

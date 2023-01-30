@@ -5,8 +5,8 @@
     "src": "serviceWorker.js",
     "scope": "/"
   },
-  "short_name": "Word Library",
-  "name": "Word Library",
+  "short_name": "Movie Words",
+  "name": "Movie Words",
   "icons": [
     {
       "src": "/android-icon-36x36.png",
@@ -51,5 +51,5 @@
   "background_color": "#ffffff",
   "lang": "de-DE",
   "dir": "auto",
-  "description": "Word Library"
+  "description": "Movie Words"
 }

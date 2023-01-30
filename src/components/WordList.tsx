@@ -13,10 +13,8 @@ function WordList(props: any) {
         <span>Home</span>
       </button>
 
-      <h2 className="title-h2">Film Words</h2>
-      <h4 className="title-h4">
-        Learn new english words, before watching a film!
-      </h4>
+      <h2 className="title-h2">Movie Words</h2>
+      <h4 className="title-h4">Enhance your English vocabulary with movies!</h4>
       <div className="words-counts">
         <p>{`New Words: ${props.words.length}`}</p>
         <p>{`Learned Words: ${props.existingWords?.length}`}</p>

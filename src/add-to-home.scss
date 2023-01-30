@@ -1,6 +1,7 @@
 .athContainer {
-  background-color: #ecf5ff;
+  background-color: #F5F5F5;
   color: #000000;
+  border: 1px solid #3C3C3C;
   margin: auto;
   border-radius: 20px;
   display: none;
@@ -127,7 +128,8 @@
   border-radius: 20px;
   padding: 0 20px;
   outline: none;
+  border: 1px solid #3C3C3C;
   align-items: center;
-  background: #0000ff;
-  color: #ffffff;
+  background: #F5F5F5;
+  color: #3C3C3C;
 }

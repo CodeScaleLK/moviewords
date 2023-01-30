@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.scss";
 import "./add-to-home.scss";
-import Word from "./components/word";
 import { initDB, useIndexedDB } from "react-indexed-db";
 import { DBConfig } from "./DBConfig";
 import AddToHomeScreen from "@ideasio/add-to-homescreen-react";
@@ -22,7 +21,7 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState("home");
   const [filmName, setFilmName] = useState("");
   const [movieList, setMovieList] = useState([]);
-  const [listStyle, setListStyle] = useState({ display: "none" });
+  const [searchStart, setSearchStart] = useState(false);
   const [words, setWords] = useState([]);
   const [existingWords, setExistingWords] = useState<any[]>([]);
   const [removedWords, setRemovedWords] = useState<any[]>([]);
@@ -33,16 +32,17 @@ const App = () => {
 
   // getting film list
   useEffect(() => {
-    if (filmName !== "") {
-      setListStyle({ display: "block" });
+    if (filmName.length > 2) {
+      setSearchStart(true);
     } else {
       setMovieList([]);
+      setSearchStart(false);
     }
     const timer = setTimeout(() => {
       if (filmName !== "") {
         fetch(
           "https://api.opensubtitles.com/api/v1/subtitles?languages=en&query=" +
-            filmName,
+            filmName.toLowerCase(),
           {
             headers: {
               "Content-Type": "application/json",
@@ -84,9 +84,9 @@ const App = () => {
             console.log("Failed to load: " + err);
           });
       } else {
-        setListStyle({ display: "none" });
+        setSearchStart(false);
       }
-    }, 2000);
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [filmName]);
@@ -121,6 +121,7 @@ const App = () => {
       var removeDW = wordsAll.filter((v: any) => removeOb[v]);
       setRemovedWords(removeDW);
       setWords(newWords);
+      setSearchStart(false);
     };
 
     reader.readAsText(file);
@@ -139,8 +140,13 @@ const App = () => {
     setFilmName(searchPhrase);
   };
 
+  const handlePpl = () => window.open("https://paypal.me/lakpriyas");
+
+  const handleBmc = () => window.open("https://www.buymeacoffee.com/lakpriya1");
+
   const onFilmClick = (filmId: number) => {
-    setFilmName("");
+    setSearchStart(true);
+    // setFilmName("");
     fetch("https://api.opensubtitles.com/api/v1/download", {
       method: "POST",
       headers: {
@@ -153,15 +159,14 @@ const App = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data["link"], {
+        fetch(data["link"], {
           headers: {
             "Content-Type": "application/json",
             "Api-Key": "mv4hWR0xPzGzcaPa74hXPAamKhd9TtgP",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Credentials": "true",
           },
-        });
-        fetch(data["link"])
+        })
           .then((response) => response.text())
           .then((subtitles) => {
             const file = new File([subtitles], "subtitles.srt", {
@@ -179,7 +184,7 @@ const App = () => {
       handleSearch={handleSearch}
       movieList={movieList}
       onFilmClick={onFilmClick}
-      listStyle={listStyle}
+      searchStart={searchStart}
       uploadFile={uploadFile}
       setCurrentPage={setCurrentPage}
     />
@@ -191,7 +196,7 @@ const App = () => {
           handleSearch={handleSearch}
           movieList={movieList}
           onFilmClick={onFilmClick}
-          listStyle={listStyle}
+          searchStart={searchStart}
           uploadFile={uploadFile}
           setCurrentPage={setCurrentPage}
         />
@@ -226,7 +231,7 @@ const App = () => {
           handleSearch={handleSearch}
           movieList={movieList}
           onFilmClick={onFilmClick}
-          listStyle={listStyle}
+          searchStart={searchStart}
           uploadFile={uploadFile}
           setCurrentPage={setCurrentPage}
         />
@@ -253,15 +258,15 @@ const App = () => {
 
       <div className="content">{displayPage}</div>
       <div className="donate-row">
-        <button>
+        <button className="outline-button" onClick={handleBmc}>
           <img src={buyMeCoffee} alt="buy_me_coffee" />
         </button>
-        <button>
+        <button className="outline-button" onClick={handlePpl}>
           <img src={paypal} alt="paypal" />
         </button>
       </div>
       <AddToHomeScreen
-        appId="Word Library"
+        appId="Movie Words"
         startAutomatically={true}
         startDelay={0}
         lifespan={300}
@@ -269,9 +274,9 @@ const App = () => {
         skipFirstVisit={false}
         displayPace={0}
         customPromptContent={{
-          title: "Do you want to install Word Library on your device?",
+          title: "Do you want to install Movie Words on your device?",
           cancelMsg: "",
-          installMsg: "Yes, sure!",
+          installMsg: "Install",
           guidanceCancelMsg: "Dismiss",
           src: logo,
         }}

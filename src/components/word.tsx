@@ -1,9 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useLayoutEffect,
+  ClassAttributes,
+} from "react";
 import { useIndexedDB } from "react-indexed-db";
 import play from "../images/icons/play.png";
 import { Tooltip } from "react-tooltip";
 import speaker from "../images/icons/speaker.svg";
 import downArrow from "../images/icons/down.svg";
+
 const Word = ({
   item,
   disable = false,
@@ -29,7 +36,7 @@ const Word = ({
         setMarked(true);
         add({ word: item }).then(
           (e) => {
-            console.log("Successfully added word: ", e);
+            // console.log("Successfully added word: ", e);
           },
           (err) => {
             console.log(err);
@@ -38,7 +45,7 @@ const Word = ({
       } else {
         setMarked(false);
         deleteRecord(item).then((e) => {
-          console.log("Successfully removed word: ", e);
+          // console.log("Successfully removed word: ", e);
         });
       }
     }
@@ -48,7 +55,7 @@ const Word = ({
     fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + item)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setMeaning(data);
       })
       .catch((err) => {
@@ -62,7 +69,7 @@ const Word = ({
     if (!marked) {
       add({ word: item }).then(
         (e) => {
-          console.log("Successfully added word: ", e);
+          // console.log("Successfully added word: ", e);
         },
         (err) => {
           console.log(err);
@@ -70,7 +77,7 @@ const Word = ({
       );
     } else {
       deleteRecord(item).then((e) => {
-        console.log("Successfully removed word: ", e);
+        // console.log("Successfully removed word: ", e);
       });
     }
   };
@@ -127,8 +134,7 @@ const Word = ({
             color: "#000",
             borderRadius: "10px",
             opacity: 1,
-            width: "500px",
-            maxWidth: "90%",
+            maxWidth: "80%",
           }}
           clickable
         >
